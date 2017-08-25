@@ -1,6 +1,6 @@
 Description
 ===========
-This Script creates copies of the files of the current directory in a new folder named "out" such that the copied files are enumerated.That is the names of the copied files will be like 1.txt 2.png etc...
+This Shell Script creates copies of the files of the current directory in a new folder named "out" such that the copied files are enumerated.That is the names of the copied files will be like 1.txt 2.png etc...
 
 Note : No affect on the subdirectories in the current folder. Only files are 
 	   enumerated.
