@@ -15,7 +15,7 @@ fi
 for hc in *
 do 	
 	myname=$0; l=${#myname}; l=`expr $l - 2`; myname=${myname:2:l}
-	if [ "$hc" != "$myname" ]
+	if [ "$hc" != "$myname" ] && [ -f "$hc" ] # if the item is a file and is not this script
 	then
 		foo=$hc
 		l=${#foo};  # l now stores length of the name of the file name
