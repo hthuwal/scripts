@@ -14,7 +14,8 @@ fi
 # for each item in current directory
 for hc in *
 do 	
-	if [ -f "$hc" ]  # if the current item is a file
+	myname=$0; l=${#myname}; l=`expr $l - 2`; myname=${myname:2:l}
+	if [ "$hc" != "$myname" ]
 	then
 		foo=$hc
 		l=${#foo};  # l now stores length of the name of the file name
@@ -30,19 +31,16 @@ do
 		  	extension=${foo:$i:l-$i} 
 
 		  	# TODO script should not rename itself but every other script should be renamed
-		  	if [ "$extension" != ".sh" ]
-		  	then
-			  	count=`expr $count + 1`
-			  	if [ $count -lt 10 ]
-				then 
-					name="0"$count; # if 1st file then name should be 01
-				else
-					name=$count;
-				fi
-			  	name=$name$extension;
-			  	echo $name;
-				cp $foo "out/"$name 
+		  	count=`expr $count + 1`
+		  	if [ $count -lt 10 ]
+			then 
+				name="0"$count; # if 1st file then name should be 01
+			else
+				name=$count;
 			fi
+		  	name=$name$extension;
+		  	echo $name;
+			cp $foo "out/"$name 
 		  fi
 		done
 	fi
