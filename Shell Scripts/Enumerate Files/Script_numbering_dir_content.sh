@@ -41,7 +41,7 @@ do
 				fi
 			  	name=$name$extension;
 			  	echo $name;
-				cp $foo "out/"$name 
+				cp "$foo" "out/"$name 
 			fi
 		  fi
 		done
