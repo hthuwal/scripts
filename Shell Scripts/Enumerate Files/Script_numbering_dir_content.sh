@@ -14,6 +14,7 @@ fi
 # for each item in current directory
 for hc in *
 do 	
+	extension=""
 	myname=$0; l=${#myname}; l=`expr $l - 2`; myname=${myname:2:l}
 	if [ "$hc" != "$myname" ] && [ -f "$hc" ] # if the item is a file and is not this script
 	then
@@ -43,5 +44,19 @@ do
 			cp "$foo" "out/"$name 
 		  fi
 		done
+
+		# if file had no extension
+		if [ "$extension" == "" ]
+		then 
+			count=`expr $count + 1`
+		  	if [ $count -lt 10 ]
+			then 
+				name="0"$count; # if 1st file then name should be 01
+			else
+				name=$count;
+			fi
+			echo $name;
+			cp "$foo" "out/"$name 
+		fi
 	fi
 done
