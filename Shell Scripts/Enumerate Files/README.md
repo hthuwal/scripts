@@ -55,4 +55,10 @@ Suppose the current directory contains 3 files and 1 folder
 	    50.png 	
 	    51.jpg
 
+___
+
+# Update
+
+- Removed bug preventing enumeration of files with "space" in their names.
+- Removed bug preventing enumeration of files without an extension.
 
