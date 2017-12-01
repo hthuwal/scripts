@@ -26,3 +26,5 @@ if len(to_be_removed) > 0:
 			if path != newpath:
 				print "renaming: " + path + " to " + newpath
 				os.rename(os.path.join(folder, path), os.path.join(folder, newpath))
+else:
+	print "Nothing to remove!\nPlease pass as arguments(space seperated) the strings that should be removed from the names"
