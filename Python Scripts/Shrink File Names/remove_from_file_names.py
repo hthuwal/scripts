@@ -19,6 +19,8 @@ if len(to_be_removed) > 0:
 			for string in to_be_removed:
 				filename = filename.replace(string, "").strip()
 			
+			filename = " ".join(filename.split('.')).strip()
+
 			newpath = filename+ext
 
 			if path != newpath:

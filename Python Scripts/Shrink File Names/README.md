@@ -2,6 +2,8 @@
 
 This python script removes a set of substrings from the name of the files in a directory.
 
+Note: Apart from the last dot of extension if the filename contains extra "." (dots) then these dots are also replaced with spaces.
+
 ## Arguments
 
 The script expects a series of arguments. 
@@ -13,7 +15,7 @@ The script expects a series of arguments.
 ## Example
 
 Suppose a folder "Test" contains the file:
-- test 123 (abc).mkv
+- tes.t 123 (abc).mkv
 
 `python remove_from_file_names.py path-to-Test "es" "12" "(" "c)"`
 
