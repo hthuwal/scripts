@@ -7,8 +7,17 @@ This python script removes a set of substrings from the name of the files in a d
 The script expects a series of arguments. 
 
 - The first argument is path to the folder containing the files.
-- Rest of the arguments are treated as substrings that should be removed from the name of the files in the folder.
-- If the first argument is not a path to a directory. Then script works on current directory and all arguments are treated as substrings to be removed from file names.
+- Rest of the arguments are treated as substrings that should be removed from the file name.
+- If the first argument is not a path to a directory. Then script works on current directory and all arguments are treated as substrings to be removed.
 
+## Example
+
+Suppose a folder "Test" contains the file:
+- test 123 (abc).mkv
+
+`python remove_from_file_names.py path-to-Test "es" "12" "(" "c)"`
+
+After running the above command the content of the folder "Test" would be
+- tt 3 ab.mkv
 
 
