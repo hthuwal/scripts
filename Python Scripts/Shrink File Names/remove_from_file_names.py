@@ -7,8 +7,8 @@ if len(sys.argv)>1 and os.path.isdir(sys.argv[1]):
 	folder = sys.argv[1]
 	to_be_removed = sys.argv[2:]
 else:
-	folder = os.getcwd()
-	to_be_removed = sys.argv[1:]
+	print "First argument should be the path to a directory"
+	sys.exit()
 
 safe_extensions = [".txt"]
 

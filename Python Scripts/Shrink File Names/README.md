@@ -10,7 +10,6 @@ The script expects a series of arguments.
 
 - The first argument is path to the folder containing the files.
 - Rest of the arguments are treated as substrings that should be removed from the file name.
-- If the first argument is not a path to a directory. Then script works on current directory and all arguments are treated as substrings to be removed.
 
 ## Example
 
