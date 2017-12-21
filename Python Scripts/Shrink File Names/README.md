@@ -1,8 +1,10 @@
 ## Description
 
-This python script removes a set of substrings from the name of the files in a directory.
+This python script removes a set of substrings from the name of the files and folderes in a directory.
 
 Note: Apart from the last dot of extension if the filename contains extra "." (dots) then these dots are also replaced with spaces.
+
+**Update**: Script now works recursively on all subdirectories
 
 ## Arguments
 
