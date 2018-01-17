@@ -67,6 +67,10 @@ if __name__ == '__main__':
 
     if len(inputs) < 2:
         print "Expected two arguments!\n"
+        print "The first argument should be the url of the webpage \
+        from whee you intent to download all pdfs."
+        print "The Second argumnet should be the path to the diectory \
+        where you want to keep the downloaded files."
         sys.exit(2)
 
     elif not os.path.isdir(inputs[2].stip()):
