@@ -1,4 +1,3 @@
-# using beautiful soup for webpage parsing
 import os
 import sys
 import urllib2
@@ -11,7 +10,14 @@ except ImportError:
     sys.exit(0)
 
 
-def parse_and_download(url, download_path=os.getcwd()):
+def parse_and_download(url, download_path):
+    '''
+    open, parse a url and try to download all pdfs on that page
+
+    Arguments:
+        url -- url from where you want to download pdfs
+        download_path -- location where to keep downloaded files
+    '''
 
     # open and read the url
     html = urllib2.urlopen(url).read()
@@ -19,8 +25,10 @@ def parse_and_download(url, download_path=os.getcwd()):
     # creating a BeautifulSoup object, which represents
     # the document as a nested data structure:
     soup = BeautifulSoup(html, "lxml")
+
     num_files = 1
     failed = 0
+
     # find all <a> tags with href in them (links)
     for tag in soup.findAll('a', href=True):
 
@@ -33,7 +41,7 @@ def parse_and_download(url, download_path=os.getcwd()):
         if extension == ".pdf":
             filepath = os.path.join(download_path, basename)
 
-            file = open(filepath, "wb")
+            file = open(filepath, "wb")  # open filestream
             try:
                 print "\n%d: Downloading %s" % (num_files, basename)
                 # open a connection to this pdf
@@ -48,7 +56,7 @@ def parse_and_download(url, download_path=os.getcwd()):
                 os.remove(filepath)
 
             finally:
-                file.close()
+                file.close()  # close file stream
 
     print "\n\n Successfully downloaded %d files" % (num_files - 1)
     print "\n %d files failed to download\n" % failed
@@ -57,15 +65,19 @@ def parse_and_download(url, download_path=os.getcwd()):
 if __name__ == '__main__':
     inputs = sys.argv
 
-    if len(inputs) == 1:
-        # TODO print help message
-        pass
+    if len(inputs) < 2:
+        print "Expected two arguments!\n"
+        sys.exit(2)
+
+    elif not os.path.isdir(inputs[2].stip()):
+        print "The second argument must be path to a directory!\n"
+        sys.exit(2)
 
     else:
         url = inputs[1].strip()
-
+        download_path = inputs[2].strip()
         try:
-            parse_and_download(url)
+            parse_and_download(url, download_path)
 
         except KeyboardInterrupt:
             print "\nExiting..."
