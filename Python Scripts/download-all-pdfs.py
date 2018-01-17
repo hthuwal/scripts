@@ -65,16 +65,14 @@ def parse_and_download(url, download_path):
 if __name__ == '__main__':
     inputs = sys.argv
 
-    if len(inputs) < 2:
+    if len(inputs) < 3:
         print "Expected two arguments!\n"
-        print "The first argument should be the url of the webpage \
-        from whee you intent to download all pdfs."
-        print "The Second argumnet should be the path to the diectory \
-        where you want to keep the downloaded files."
+        print "The first argument should be the url of the webpage from where you intent to download all pdfs."
+        print "The Second argumnet should be the path to the diectory where you want to keep the downloaded files."
         sys.exit(2)
 
-    elif not os.path.isdir(inputs[2].stip()):
-        print "The second argument must be path to a directory!\n"
+    elif not os.path.isdir(inputs[2].strip()):
+        print "The second argument must be a path to a directory!\n"
         sys.exit(2)
 
     else:
