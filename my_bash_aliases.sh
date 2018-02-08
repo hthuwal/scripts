@@ -20,6 +20,9 @@ alias gapdf='wget -A pdf -m -p -E -k -K -np -nd'
 alias pd='aria2c --file-allocation=none -c -x 16 -s 16' 
 alias ptpy='ptpython'
 
+alias subl=subl3
+alias remorphans='sudo pacman -Rns $(pacman -Qtdq)'
+alias remcache='sudo paccache -r'
 xsv-head() {
     lines=${2:-100}
     xsv cat -n rows -- $1 | head -n $lines | xsv table | less -S
