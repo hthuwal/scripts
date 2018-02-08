@@ -23,13 +23,13 @@ def clean(folder, to_be_removed):
                 targetpath = os.path.join(folder, newpath)
 
                 if path != newpath:
-                    print "renaming: " + path + " to " + newpath
+                    print("renaming: " + path + " to " + newpath)
                     os.rename(sourcepath, targetpath)
 
                 if os.path.isdir(targetpath):
                     clean(targetpath, to_be_removed)
     else:
-        print "Nothing to remove!\nPlease pass as arguments(space seperated) the strings that should be removed from the names"
+        print("Nothing to remove!\nPlease pass as arguments(space seperated) the strings that should be removed from the names")
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
@@ -37,5 +37,5 @@ if __name__ == '__main__':
         to_be_removed = sys.argv[2:]
         clean(folder, to_be_removed)
     else:
-        print "First argument should be the path to a directory"
+        print("First argument should be the path to a directory")
         sys.exit()

@@ -11,6 +11,8 @@ except ImportError:
     print "Please download and install BeautifulSoup first"
     sys.exit(0)
 
+extensions_to_be_downloaded = [".pdf", ".txt", ".pptx", ".csv"]
+# extensions_to_be_downloaded = [".pdf"]
 
 def parse_and_download(url, download_path, keep_link_string_as_name=True):
     '''
@@ -43,10 +45,10 @@ def parse_and_download(url, download_path, keep_link_string_as_name=True):
         basename = os.path.basename(link)
         extension = os.path.splitext(basename)[1]
 
-        if extension == ".pdf":
+        if extension in extensions_to_be_downloaded:
 
             if tag.string is not None and keep_link_string_as_name is True:
-                filepath = os.path.join(download_path, tag.string+".pdf")
+                filepath = os.path.join(download_path, tag.string.strip(extension)+extension)
             else:
                 filepath = os.path.join(download_path, basename)
 

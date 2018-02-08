@@ -1,8 +1,12 @@
 ## Description
 
-This python script tries to download all pdf files from a webpage
+This python script tries to download all files of following type from a webpage
+- .pdf
+- .txt
+- .pptx
+- .csv
 
-The webpage is parsed using BeautifulSoup and all the <a> tags with href containing .pdf as extensions are downloaded.
+The webpage is parsed using BeautifulSoup and all the <a> tags with href containing desired extensions are downloaded.
 
 ## Arguments
 
