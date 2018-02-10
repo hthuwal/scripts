@@ -20,9 +20,17 @@ alias gapdf='wget -A pdf -m -p -E -k -K -np -nd'
 alias pd='aria2c --file-allocation=none -c -x 16 -s 16' 
 alias ptpy='ptpython'
 
+#aliases for arch
 alias subl=subl3
 alias remorphans='sudo pacman -Rns $(pacman -Qtdq)'
 alias remcache='sudo paccache -r'
+
+#aliases for docker
+alias drmi='sudo docker rmi $(sudo docker images -q)'
+alias drmc='sudo docker rm $(sudo docker ps -a -q)'
+alias dkillall='sudo docker kill $(sudo docker ps -a -q)'
+alias vpl_docker='sudo docker run --rm --privileged -p 80:80 -p 443:443 -it --user root hthuwal/vpl_docker bash -c "service vpl-jail-system start; bash"'
+
 xsv-head() {
     lines=${2:-100}
     xsv cat -n rows -- $1 | head -n $lines | xsv table | less -S
