@@ -2,17 +2,19 @@
 
 import os
 import sys
-import urllib2
-import urlparse
+import requests
+from urllib.parse import urljoin
+from urllib.request import urlopen
 
 try:
     from bs4 import BeautifulSoup
 except ImportError:
-    print "Please download and install BeautifulSoup first"
+    print("Please download and install BeautifulSoup first")
     sys.exit(0)
 
 extensions_to_be_downloaded = [".pdf", ".txt", ".pptx", ".csv"]
 # extensions_to_be_downloaded = [".pdf"]
+
 
 def parse_and_download(url, download_path, keep_link_string_as_name=True):
     '''
@@ -28,9 +30,11 @@ def parse_and_download(url, download_path, keep_link_string_as_name=True):
     '''
 
     # open and read the url
-    html = urllib2.urlopen(url).read()
+    html = requests.get(url).text
+
     # creating a BeautifulSoup object, which represents
     # the document as a nested data structure:
+
     soup = BeautifulSoup(html, "lxml")
 
     num_files = 1
@@ -40,7 +44,7 @@ def parse_and_download(url, download_path, keep_link_string_as_name=True):
     for tag in soup.findAll('a', href=True):
 
         # incase the link is relative to url
-        link = urlparse.urljoin(url, tag['href'])
+        link = urljoin(url, tag['href'])
 
         basename = os.path.basename(link)
         extension = os.path.splitext(basename)[1]
@@ -48,46 +52,46 @@ def parse_and_download(url, download_path, keep_link_string_as_name=True):
         if extension in extensions_to_be_downloaded:
 
             if tag.string is not None and keep_link_string_as_name is True:
-                filepath = os.path.join(download_path, tag.string.strip(extension)+extension)
+                filepath = os.path.join(download_path, tag.string.strip(extension) + extension)
             else:
                 filepath = os.path.join(download_path, basename)
 
             if not os.path.exists(filepath):
                 file = open(filepath, "wb")  # open filestream
                 try:
-                    print "\n%d: Downloading %s" % (num_files, basename)
+                    print("\n%d: Downloading %s" % (num_files, basename))
                     # open a connection to this pdf
-                    pdf = urllib2.urlopen(link)
+                    pdf = urlopen(link)
                     file.write(pdf.read())
                     num_files += 1
 
                 except Exception as e:
                     failed += 1
-                    print "\nCouldn't download %s" % (basename)
-                    print e
+                    print("\nCouldn't download %s" % (basename))
+                    print(e)
                     os.remove(filepath)
 
                 finally:
                     file.close()  # close file stream
             else:
-                print "\nSkipping %s" % (basename)
-                print "File aleady exists"
+                print("\nSkipping %s" % (basename))
+                print("File aleady exists")
 
-    print "\n\n Successfully downloaded %d files" % (num_files - 1)
-    print "\n %d files failed to download\n" % failed
+    print("\n\n Successfully downloaded %d files" % (num_files - 1))
+    print("\n %d files failed to download\n" % failed)
 
 
 if __name__ == '__main__':
     inputs = sys.argv
 
     if len(inputs) < 3:
-        print "Expected two arguments!\n"
-        print "The first argument should be the url of the webpage from where you intent to download all pdfs."
-        print "The Second argumnet should be the path to the diectory where you want to keep the downloaded files."
+        print("Expected two arguments!\n")
+        print("The first argument should be the url of the webpage from where you intent to download all pdfs.")
+        print("The Second argumnet should be the path to the diectory where you want to keep the downloaded files.")
         sys.exit(2)
 
     elif not os.path.isdir(inputs[2].strip()):
-        print "The second argument must be a path to a directory!\n"
+        print("The second argument must be a path to a directory!\n")
         sys.exit(2)
 
     else:
@@ -97,10 +101,10 @@ if __name__ == '__main__':
             parse_and_download(url, download_path, keep_link_string_as_name=True)
 
         except KeyboardInterrupt:
-            print "\nExiting..."
+            print("\nExiting...")
             sys.exit(1)
 
         except Exception as e:
-            print "Something went wrong!"
-            print e
+            print("Something went wrong!")
+            print(e)
             sys.exit(2)
