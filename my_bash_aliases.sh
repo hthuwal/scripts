@@ -62,7 +62,7 @@ function tomp3(){
 	mkdir mp3_tmp
 	for i in *.$1
 	do 
-		(ffmpeg -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.mp3}").mp3") 
+		(ffmpeg -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
 		if [ $? -eq 0 ]
 		then
 			echo "Conversion successful"
