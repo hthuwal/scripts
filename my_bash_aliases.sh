@@ -1,4 +1,5 @@
 alias youtube="youtube-dl -c -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mkv"
+alias youmusic="youtube-dl -c -f bestaudio[ext=m4a]"
 alias subs="subliminal download -l en"
 #python
 alias pie="python3.6"
@@ -20,8 +21,9 @@ alias gapdf='wget -A pdf -m -p -E -k -K -np -nd'
 alias pd='aria2c --file-allocation=none -c -x 16 -s 16' 
 alias ptpy='ptpython'
 
-#aliases for arch
 alias subl=subl3
+
+#aliases for arch
 alias remorphans='sudo pacman -Rns $(pacman -Qtdq)'
 alias remcache='sudo paccache -r'
 
@@ -55,3 +57,20 @@ function x265tox264() {
 	echo "Trying to convert to x264.."
 	ffmpeg -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
 }
+
+function tomp3(){
+	mkdir mp3_tmp
+	for i in *.$1
+	do 
+		(ffmpeg -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.mp3}").mp3") 
+		if [ $? -eq 0 ]
+		then
+			echo "Conversion successful"
+			rm "$i"
+		fi
+	done
+	mv -v mp3_tmp/* ./
+	rm -rf mp3_tmp
+}
+
+alias img2vid='ffmpeg -r 3 -f image2 -s 1024x768 -i %03d.png -vcodec libx264 -crf 25'
