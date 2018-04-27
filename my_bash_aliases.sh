@@ -73,4 +73,47 @@ function tomp3(){
 	rm -rf mp3_tmp
 }
 
-alias img2vid='ffmpeg -r 3 -f image2 -s 1024x768 -i %03d.png -vcodec libx264 -crf 25'
+function activate()
+{
+    function isNum(){
+        re='^[0-9]+$'
+        if [[ $1 =~ $re ]]
+        then
+            echo 1
+        else
+            echo 0
+        fi
+    }
+
+    ask=""
+    venvs=()
+    iter=0
+    while IFS= read line
+        do
+            arr=($line) #splitting line into elements
+            venvs+=(${arr[1]})
+            ask="$ask$iter: ${arr[0]}\n"
+            iter=$(($iter+1))
+        done <"/home/hthuwal/.venvs_list"
+
+
+
+    if [ "$#" -eq 1 ]
+    then
+        input=$1
+    else
+        echo -e $ask
+        read input
+    fi
+
+    max=$(($iter - 1))
+
+    if [[ $(isNum $input) -eq 1 ]] && [ $input -le $max ] && [ $input -ge 0 ]
+    then
+        source ${venvs[$input]}
+    else
+        echo "Pleae enter a valid number between [0 and $max]"
+    fi
+}
+
+alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -crf 25'
