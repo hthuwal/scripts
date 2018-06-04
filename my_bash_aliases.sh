@@ -58,6 +58,23 @@ function x265tox264() {
 	ffmpeg -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
 }
 
+function clipVideo() {
+    file_name=$(basename "$1")
+    root_dir=$(dirname "$1")
+    dest_dir="$root_dir""/clipped"
+    start=$2
+    end=$3
+
+    if [ ! -d "$dest_dir" ]; then
+        mkdir "$dest_dir"
+    fi
+
+    dest_file="$dest_dir""/""$start""_""$end""_""$file_name"
+    
+    echo -e "\nClipping $file_name from $start to $end\n"
+    ffmpeg -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
+}
+
 function tomp3(){
 	mkdir mp3_tmp
 	for i in *.$1
