@@ -21,7 +21,7 @@ alias gapdf='wget -A pdf -m -p -E -k -K -np -nd'
 alias pd='aria2c --file-allocation=none -c -x 16 -s 16' 
 alias ptpy='ptpython'
 
-alias subl=subl3
+alias vi='vim'
 
 #aliases for arch
 alias remorphans='sudo pacman -Rns $(pacman -Qtdq)'
@@ -33,29 +33,48 @@ alias drmc='sudo docker rm $(sudo docker ps -a -q)'
 alias dkillall='sudo docker kill $(sudo docker ps -a -q)'
 alias vpl_docker='sudo docker run --rm --privileged -p 80:80 -p 443:443 -it --user root hthuwal/vpl_docker bash -c "service vpl-jail-system start; bash"'
 
+alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -crf 25'
+
+function cpp() {
+
+    num_params=$#
+    if [[ $num_params -eq 2 ]]
+    then    
+        echo "g++ $1 && ./a.out < $2"
+        g++ $1 && ./a.out < $2
+    elif [[ $num_params -eq 1 ]]
+    then
+        echo "g++ $1 && ./a.out"
+        g++ $1 && ./a.out
+    else
+        echo -e "Atleast one argmuent required"
+        echo -e "\nUsage:\n\n\tcpp file.cpp input_file(optional)\n"
+    fi
+}
+
 xsv-head() {
     lines=${2:-100}
     xsv cat -n rows -- $1 | head -n $lines | xsv table | less -S
 }
 
 function gio() { 
-	curl -L -s https://www.gitignore.io/api/$@ ;
+    curl -L -s https://www.gitignore.io/api/$@ ;
 }
 
 function x265tox264() {
 
-	file_name=$(basename "$@")
-	root_dir=$(dirname "$@")
-	dest_dir="$root_dir""/x264"
-	
-	if [ ! -d "$dest_dir" ]; then
-		mkdir "$dest_dir"
-	fi
+    file_name=$(basename "$@")
+    root_dir=$(dirname "$@")
+    dest_dir="$root_dir""/x264"
+    
+    if [ ! -d "$dest_dir" ]; then
+        mkdir "$dest_dir"
+    fi
 
-	dest_file="$dest_dir""/""$file_name"
-	
-	echo "Trying to convert to x264.."
-	ffmpeg -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
+    dest_file="$dest_dir""/""$file_name"
+    
+    echo "Trying to convert to x264.."
+    ffmpeg -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
 }
 
 function clipVideo() {
@@ -76,18 +95,18 @@ function clipVideo() {
 }
 
 function tomp3(){
-	mkdir mp3_tmp
-	for i in *.$1
-	do 
-		(ffmpeg -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
-		if [ $? -eq 0 ]
-		then
-			echo "Conversion successful"
-			rm "$i"
-		fi
-	done
-	mv -v mp3_tmp/* ./
-	rm -rf mp3_tmp
+    mkdir mp3_tmp
+    for i in *.$1
+    do 
+        (ffmpeg -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
+        if [ $? -eq 0 ]
+        then
+            echo "Conversion successful"
+            rm "$i"
+        fi
+    done
+    mv -v mp3_tmp/* ./
+    rm -rf mp3_tmp
 }
 
 function activate()
@@ -132,5 +151,3 @@ function activate()
         echo "Pleae enter a valid number between [0 and $max]"
     fi
 }
-
-alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -crf 25'
