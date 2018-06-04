@@ -40,11 +40,11 @@ function cpp() {
     num_params=$#
     if [[ $num_params -eq 2 ]]
     then    
-        echo "g++ $1 && ./a.out < $2"
+        echo "g++ $1 && time ./a.out < $2"
         g++ $1 && ./a.out < $2
     elif [[ $num_params -eq 1 ]]
     then
-        echo "g++ $1 && ./a.out"
+        echo "g++ $1 && time ./a.out"
         g++ $1 && ./a.out
     else
         echo -e "Atleast one argmuent required"
