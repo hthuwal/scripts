@@ -11,6 +11,7 @@ def main():
     elif op.exists(sys.argv[1]):
         dirpath = sys.argv[1]
 
+    dirpath = os.path.abspath(dirpath)
     cmd = "subliminal download -l en %s" % (dirpath)
     os.system(cmd)
 
