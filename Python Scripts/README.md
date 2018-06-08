@@ -1,4 +1,4 @@
-## Description
+## remove_from_file_names.py
 
 This python script removes a set of substrings from the name of the files and folderes in a directory.
 
@@ -6,14 +6,14 @@ Note: Apart from the last dot of extension if the filename contains extra "." (d
 
 **Update**: Script now works recursively on all subdirectories
 
-## Arguments
+### Arguments
 
 The script expects a series of arguments. 
 
 - The first argument is path to the folder containing the files.
 - Rest of the arguments are treated as substrings that should be removed from the file name.
 
-## Example
+### Example
 
 Suppose a folder "Test" contains the file:
 - tes.t 123 (abc).mkv
@@ -22,5 +22,23 @@ Suppose a folder "Test" contains the file:
 
 After running the above command the content of the folder "Test" would be
 - tt 3 ab.mkv
+
+
+## download_all
+
+This python script tries to download all files of following type from a webpage
+- .pdf
+- .txt
+- .pptx
+- .csv
+
+The webpage is parsed using BeautifulSoup and all the <a> tags with href containing desired extensions are downloaded.
+
+### Arguments
+
+The script expects a series of arguments. 
+- The first argument should be the url of the webpage from where you intent to download all pdfs. 
+- The Second argumnet should be the path to the diectory where you want to keep the downloaded files.
+
 
 
