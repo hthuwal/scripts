@@ -1,5 +1,5 @@
 alias youtube="youtube-dl -c -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mkv"
-alias youmusic="youtube-dl -c -f bestaudio[ext=m4a]"
+alias youmusic="youtube-dl -c -f bestaudio[ext=m4a] -x --audio-format mp3"
 alias subs="subliminal download -l en"
 #python
 alias pie="python3.6"
