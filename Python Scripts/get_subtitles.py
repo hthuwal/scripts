@@ -12,7 +12,7 @@ def main():
         dirpath = sys.argv[1]
 
     dirpath = os.path.abspath(dirpath)
-    cmd = "subliminal download -l en %s" % (dirpath)
+    cmd = "subliminal download -l en \"%s\"" % (dirpath)
     os.system(cmd)
 
 
