@@ -41,11 +41,11 @@ function cpp() {
     if [[ $num_params -eq 2 ]]
     then    
         echo "g++ $1 && time ./a.out < $2"
-        g++ $1 && ./a.out < $2
+        g++ $1 && time ./a.out < $2
     elif [[ $num_params -eq 1 ]]
     then
         echo "g++ $1 && time ./a.out"
-        g++ $1 && ./a.out
+        g++ $1 && time ./a.out
     else
         echo -e "Atleast one argmuent required"
         echo -e "\nUsage:\n\n\tcpp file.cpp input_file(optional)\n"
@@ -151,3 +151,4 @@ function activate()
         echo "Pleae enter a valid number between [0 and $max]"
     fi
 }
+
