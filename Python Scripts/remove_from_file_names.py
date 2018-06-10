@@ -6,7 +6,7 @@ import sys
 safe_extensions = [".txt"]
 
 
-def clean(folder, to_be_removed):
+def clean(folder, to_be_removed, recurse=True):
     if len(to_be_removed) > 0:
         for path in os.listdir(folder):
 
@@ -26,10 +26,11 @@ def clean(folder, to_be_removed):
                     print("renaming: " + path + " to " + newpath)
                     os.rename(sourcepath, targetpath)
 
-                if os.path.isdir(targetpath):
+                if os.path.isdir(targetpath) and recurse:
                     clean(targetpath, to_be_removed)
     else:
         print("Nothing to remove!\nPlease pass as arguments(space seperated) the strings that should be removed from the names")
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
