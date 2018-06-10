@@ -96,13 +96,22 @@ function clipVideo() {
 
 function addsub(){
     file_name=$(basename "$1")
+    ext="${file_name##*.}"
     root_dir=$(dirname "$1")
     subtitles=$2
 
     dest_file="$root_dir""/subbed_""$file_name"
-    
     echo -e "\nAdding subs:$subtitles to $file_name\n"
-    ffmpeg -i "$file_name" -i "$subtitles" -c copy -c:s mov_text "$dest_file"
+
+    # (xfce4-terminal --working-directory="$root_dir" --command="watch \"du -h '$file_name' '$dest_file'\"")&
+
+    srt="mov_text" ## for mp4
+    if [ $ext == "mkv" ]; then
+        srt="srt"
+    fi
+    
+    ffmpeg -i "$file_name" -i "$subtitles" -c copy -c:s $srt "$dest_file"
+
     if [ $? == 0 ]; then
         echo -e "Subtiles added successfullly\n"
         rm "$file_name" "$subtitles"
