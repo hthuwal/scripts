@@ -94,6 +94,25 @@ function clipVideo() {
     ffmpeg -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
 }
 
+function addsub(){
+    file_name=$(basename "$1")
+    root_dir=$(dirname "$1")
+    subtitles=$2
+
+    dest_file="$root_dir""/subbed_""$file_name"
+    
+    echo -e "\nAdding subs:$subtitles to $file_name\n"
+    ffmpeg -i "$file_name" -i "$subtitles" -c copy -c:s mov_text "$dest_file"
+    if [ $? == 0 ]; then
+        echo -e "Subtiles added successfullly\n"
+        rm "$file_name" "$subtitles"
+        mv "$dest_file" "$file_name"
+    else
+        echo -e "\nFailed to add subtitles\n"
+        rm "$dest_file"
+    fi
+}
+
 function tomp3(){
     mkdir mp3_tmp
     for i in *.$1
