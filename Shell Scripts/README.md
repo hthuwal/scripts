@@ -1,4 +1,4 @@
-## ffmpeg_utils.sh
+# ffmpeg_utils.sh
 
 Contains Functions for doing some video related tasks
 
@@ -6,7 +6,7 @@ Contains Functions for doing some video related tasks
 - ffmpeg
 - [ffpb](https://github.com/althonos/ffpb) (wrapper around ffmpeg to show progress)
 
-### tox264
+### 1. tox264
 
 ```bash
 tox264 pathtovideo
@@ -18,7 +18,7 @@ Re-encode video using x264 codec. Re-encoded video is stored in **x264** folder 
 
 - pathtovideo: path to the video to be converted.
 
-### tomp3
+### 2. tomp3
 
 ```bash
 tomp3 ext
@@ -30,7 +30,7 @@ Convert all the files with with *.ext* extension in the current directory are co
 
 - ext: extension of files to be converted. e.g *mp4*, *mkv* etc..
 
-### clipVideo
+### 3. clipVideo
 
 ```bash
 clipVideo pathtovideo start_time end_time
@@ -44,14 +44,14 @@ Video is clipped from start_time to end_time. Clipped file is stored in the **cl
 - start_time: e.g **16:10**
 - end_time: e.g **17:20**
 
-### addsub
+### 4. addsub
 ```bash
 addsub pathtovideo pathtosubtitles
 ```
 
 Mux subtitles into the video. (Replaces all previous subtitles)
 
-### addsub2all
+### 5. addsub2all
 
 ```bash
 addsub2all
@@ -61,7 +61,7 @@ Add subtitles to those files in the current directory for which subtitles are pr
 
 Note: for **movie.mp4** subtitles should be named as **movie.srt**
 
-## Script_numbering_dir_content.sh
+# Script_numbering_dir_content.sh
 
 ### Description
 
