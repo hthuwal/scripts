@@ -63,14 +63,14 @@ function clipVideo(){
         mkdir "$dest_dir"
     fi
 
-    dest_file="$dest_dir""/""$start""_""$end""_""$file_name"
-    
+    dest_file="$dest_dir""/""$start""to""$end""of""$file_name"
+    dest_file=$(sed "s/:/_/g" <<< $dest_file)
     echo -e "\nClipping $file_name from $start to $end\n"
     ffpb -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
 }
 
 function addsub(){
-    if [ $# -ne 3 ]; then
+    if [ $# -ne 2 ]; then
         msg="Three arguments expected $# given\n
              \r\tUsage: addsub pathtovideo pathtosrt\n\n"
         printf "$msg"
