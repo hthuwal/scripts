@@ -18,7 +18,7 @@ function tox264() {
     dest_file="$dest_dir""/""$file_name"
     
     echo "Trying to convert to x264.."
-    ffmpeg -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
+    ffpb -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
 }
 
 function tomp3(){
@@ -33,7 +33,7 @@ function tomp3(){
     mkdir mp3_tmp
     for i in *.$1
     do 
-        (ffmpeg -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
+        (ffpb -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
         if [ $? -eq 0 ]
         then
             echo "Conversion successful"
@@ -66,7 +66,7 @@ function clipVideo(){
     dest_file="$dest_dir""/""$start""_""$end""_""$file_name"
     
     echo -e "\nClipping $file_name from $start to $end\n"
-    ffmpeg -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
+    ffpb -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
 }
 
 function addsub(){

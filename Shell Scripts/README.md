@@ -2,6 +2,10 @@
 
 Contains Functions for doing some video related tasks
 
+### Dependncy
+- ffmpeg
+- [ffpb](https://github.com/althonos/ffpb) (wrapper around ffmpeg to show progress)
+
 ### tox264
 
 ```bash
