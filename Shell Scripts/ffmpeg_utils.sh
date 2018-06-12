@@ -4,6 +4,7 @@ function x265tox264() {
         printf "Usage:\n\tx265tox264 movie.format\n"
         return 1
     fi
+    
     file_name=$(basename "$1")
     root_dir=$(dirname "$1")
     dest_dir="$root_dir""/x264"

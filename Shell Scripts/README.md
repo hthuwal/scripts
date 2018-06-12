@@ -2,8 +2,7 @@
 
 ### Description
 
-Contains Functions to do quickly do some video related tasks
-
+Contains Functions for doing some video related tasks
 
 ## Script_numbering_dir_content.sh
 
