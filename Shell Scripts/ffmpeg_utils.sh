@@ -1,7 +1,9 @@
-function x265tox264() {
+function tox264() {
     if [ $# -ne 1 ]; then
-        printf "One argument expected $# given\n"
-        printf "Usage:\n\tx265tox264 movie.format\n"
+        msg="One argument expected $# given\n
+            \r\tUsage: tox264 pathtovideo\n
+            \rReencode the video using x264\n\n"
+        printf "$msg"
         return 1
     fi
     
@@ -19,7 +21,40 @@ function x265tox264() {
     ffmpeg -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
 }
 
-function clipVideo() {
+function tomp3(){
+    if [ $# -ne 1 ]; then
+        msg="One argument expected $# given\n
+             \r\tUsage: tomp3 ext\n
+             \rAll files with .ext extension in current directory will be converted to .mp3
+             \rOriginal File is deleted\n\n"
+        printf "$msg"
+        return 1
+    fi
+
+    mkdir mp3_tmp
+    for i in *.$1
+    do 
+        (ffmpeg -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
+        if [ $? -eq 0 ]
+        then
+            echo "Conversion successful"
+            rm "$i"
+        fi
+    done
+    mv -v mp3_tmp/* ./
+    rm -rf mp3_tmp
+}
+
+
+function clipVideo(){
+    if [ $# -ne 3 ]; then
+        msg="Three arguments expected $# given\n
+             \r\tUsage: clipVideo pathtovideo start_time end_time\n
+             \rVideo is clipped from start_time to end_time\n\n"
+        printf "$msg"
+        return 1
+    fi
+
     file_name=$(basename "$1")
     root_dir=$(dirname "$1")
     dest_dir="$root_dir""/clipped"
@@ -37,6 +72,13 @@ function clipVideo() {
 }
 
 function addsub(){
+    if [ $# -ne 3 ]; then
+        msg="Three arguments expected $# given\n
+             \r\tUsage: addsub pathtovideo pathtosrt\n\n"
+        printf "$msg"
+        return 1
+    fi
+
     file_name=$(basename "$1")
     ext="${file_name##*.}"
     root_dir=$(dirname "$1")
@@ -64,7 +106,7 @@ function addsub(){
     fi
 }
 
-function addsub2all(){
+function addsub2all(){    
     for file in *
     do
         file_name=$(basename "$file")
@@ -76,19 +118,4 @@ function addsub2all(){
             addsub "$file" "$subtiles"
         fi
     done
-}
-
-function tomp3(){
-    mkdir mp3_tmp
-    for i in *.$1
-    do 
-        (ffmpeg -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
-        if [ $? -eq 0 ]
-        then
-            echo "Conversion successful"
-            rm "$i"
-        fi
-    done
-    mv -v mp3_tmp/* ./
-    rm -rf mp3_tmp
 }
