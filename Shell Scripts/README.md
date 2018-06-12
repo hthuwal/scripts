@@ -1,8 +1,61 @@
 ## ffmpeg_utils.sh
 
-### Description
-
 Contains Functions for doing some video related tasks
+
+### tox264
+
+```bash
+tox264 pathtovideo
+```
+
+Re-encode video using x264 codec. Re-encoded video is stored in **x264** folder in the root directory of the video
+
+**Arguments**
+
+- pathtovideo: path to the video to be converted.
+
+### tomp3
+
+```bash
+tomp3 ext
+```
+
+Convert all the files with with *.ext* extension in the current directory are converted to *.mp3*
+
+**Arguments**
+
+- ext: extension of files to be converted. e.g *mp4*, *mkv* etc..
+
+### clipVideo
+
+```bash
+clipVideo pathtovideo start_time end_time
+```
+
+Video is clipped from start_time to end_time. Clipped file is stored in the **clipped** folder in the root directory of the video.
+
+**Arguments**
+
+- pathtovideo: path to the video to be converted. e.g **movie.mp4**
+- start_time: e.g **16:10**
+- end_time: e.g **17:20**
+
+### addsub
+```bash
+addsub pathtovideo pathtosubtitles
+```
+
+Mux subtitles into the video. (Replaces all previous subtitles)
+
+### addsub2all
+
+```bash
+addsub2all
+```
+
+Add subtitles to those files in the current directory for which subtitles are present.
+
+Note: for **movie.mp4** subtitles should be named as **movie.srt**
 
 ## Script_numbering_dir_content.sh
 
