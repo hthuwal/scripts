@@ -25,8 +25,7 @@ function tomp3(){
     if [ $# -ne 1 ]; then
         msg="One argument expected $# given\n
              \r\tUsage: tomp3 ext\n
-             \rAll files with .ext extension in current directory will be converted to .mp3
-             \rOriginal File is deleted\n\n"
+             \rAll files with .ext extension in current directory will be converted to .mp3\n\n"
         printf "$msg"
         return 1
     fi
@@ -38,7 +37,6 @@ function tomp3(){
         if [ $? -eq 0 ]
         then
             echo "Conversion successful"
-            rm "$i"
         fi
     done
     mv -v mp3_tmp/* ./
