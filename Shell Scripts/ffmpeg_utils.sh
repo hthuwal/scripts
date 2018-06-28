@@ -21,6 +21,26 @@ function tox264() {
     ffpb -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
 }
 
+function scale() {
+    if [ $# -ne 3 ]; then
+        msg="Three argument expected $# given\n
+            \r\tUsage: scale pattovideo width height\n
+            \rScale the video to width x height\n\n"
+        printf "$msg"
+        return 1
+    fi
+    
+    file_name=$(basename "$1")
+    root_dir=$(dirname "$1")
+    width="$2"
+    height="$3"
+
+    dest_file=$root_dir/"$width"x"$height"_"$file_name"
+
+    echo -e "Scaling...\n"
+    ffpb -i "$1" -vf scale="$width"x"$height" "$dest_file"
+}
+
 function tomp3(){
     if [ $# -ne 1 ]; then
         msg="One argument expected $# given\n
