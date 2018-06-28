@@ -1,6 +1,7 @@
 alias youtube="youtube-dl -c -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mkv"
 alias youmusic="youtube-dl -c -f bestaudio[ext=m4a] -x --audio-format mp3"
 alias subs="subliminal download -l en"
+alias bcp="rsync -ah --info=progress2"
 #python
 alias pie="python3.6"
 
@@ -39,6 +40,46 @@ alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -c
 # Functions
 function gio() { 
     curl -L -s https://www.gitignore.io/api/$@ ;
+}
+
+function rename_media(){
+	num_params=$#
+	
+	if [[ $num_params -eq 1 ]]
+    then
+
+    	if [[ -d $1 ]]
+    	then
+	    	cur=$(pwd)
+			cd $1
+	        for filename in *
+	        do
+	          	tmp="$(echo "$filename" | tr '[A-Z]' '[a-z]')"
+	          	case "$filename" in
+	          	20*)
+	        	  echo "Don't need to rename "$filename
+	        	;;
+	            *.MOV|*.mov) 
+	              mv -iv "$filename" "$(exiftool -s -CreationDate -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_$tmp
+	              ;;
+	            *.JPG|*.jpg)
+	              mv -iv "$filename" "$(exiftool -s -CreateDate -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_$tmp
+	              ;;
+	            *.MP4|*.mp4|*.AVI|*.avi)
+	              mv -iv "$filename" "$(exiftool -s -FileModifyDate -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_$tmp
+	              ;;
+	            *)
+	              echo 'Not a *.jpg or a *.mov!'
+	              ;;
+	          	esac
+	        done
+        else
+        	echo $1 is not a directory
+        fi
+    else
+        echo -e "One argmuent required: The path to the directory containing media files"
+        echo -e "\nUsage:\n\n\trename_media pathtofolder\n"
+    fi
 }
 
 function cpp() {
