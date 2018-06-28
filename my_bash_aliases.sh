@@ -73,6 +73,7 @@ function rename_media(){
 	              ;;
 	          	esac
 	        done
+	        cd $cur
         else
         	echo $1 is not a directory
         fi
