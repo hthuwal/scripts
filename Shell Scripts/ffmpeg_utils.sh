@@ -1,15 +1,16 @@
-function tox264() {
-    if [ $# -ne 1 ]; then
-        msg="One argument expected $# given\n
-            \r\tUsage: tox264 pathtovideo\n
-            \rReencode the video using x264\n\n"
+function convto() {
+    if [ $# -ne 2 ]; then
+        msg="Two arguments expected $# given\n
+            \r\tUsage: convert pathtovideo video_format\n
+            \rReencode the video using video_format(libx264, libx265)\n\n"
         printf "$msg"
         return 1
     fi
     
     file_name=$(basename "$1")
     root_dir=$(dirname "$1")
-    dest_dir="$root_dir""/x264"
+    format=$2
+    dest_dir="$root_dir""/""$format"
     
     if [ ! -d "$dest_dir" ]; then
         mkdir "$dest_dir"
@@ -17,8 +18,8 @@ function tox264() {
 
     dest_file="$dest_dir""/""$file_name"
     
-    echo "Trying to convert to x264.."
-    ffpb -i "$@" -map 0 -c:a copy -c:s copy -c:v libx264 "$dest_file"
+    echo "Trying to convert to $format.."
+    ffpb -i "$1" -map 0 -c:a copy -c:s copy -c:v "$format" "$dest_file"
 }
 
 function scale() {
@@ -38,7 +39,7 @@ function scale() {
     dest_file=$root_dir/"$width"x"$height"_"$file_name"
 
     echo -e "Scaling...\n"
-    ffpb -i "$1" -vf scale="$width"x"$height" "$dest_file"
+    ffpb -i "$1" -vf scale="$width"x"$height" "$dest_file"  
 }
 
 function tomp3(){
