@@ -6,6 +6,7 @@ alias bcp="rsync -ah --info=progress2"
 alias pie="python3.6"
 
 alias r='ranger'
+alias o='xdg-open'
 
 #Github
 alias gst="git status"
@@ -56,7 +57,7 @@ function rename_media(){
 	        do
 	          	tmp="$(echo "$filename" | tr '[A-Z]' '[a-z]')"
 	          	case "$filename" in
-	          	20*)
+	          	20*) ##name already starts with 2018 or 20** something
 	        	  echo "Don't need to rename "$filename
 	        	;;
 	            *.MOV|*.mov) 
