@@ -3,8 +3,9 @@
 import os
 import sys
 import requests
-from urllib.parse import urljoin
-from urllib.request import urlopen
+from requests.compat import urljoin
+from tqdm import tqdm
+import math
 
 try:
     from bs4 import BeautifulSoup
@@ -12,11 +13,11 @@ except ImportError:
     print("Please download and install BeautifulSoup first")
     sys.exit(0)
 
-extensions_to_be_downloaded = [".pdf", ".txt", ".pptx", ".csv"]
+default_extensions = [".pdf"]
 # extensions_to_be_downloaded = [".pdf"]
 
 
-def parse_and_download(url, download_path, keep_link_string_as_name=True):
+def parse_and_download(url, download_path, keep_link_string_as_name=True, extensions=default_extensions):
     '''
     open, parse a url and try to download all pdfs on that page
 
@@ -49,7 +50,7 @@ def parse_and_download(url, download_path, keep_link_string_as_name=True):
         basename = os.path.basename(link)
         extension = os.path.splitext(basename)[1]
 
-        if extension in extensions_to_be_downloaded:
+        if extension in extensions:
 
             if tag.string is not None and keep_link_string_as_name is True:
                 filepath = os.path.join(download_path, tag.string.strip(extension) + extension)
@@ -57,22 +58,27 @@ def parse_and_download(url, download_path, keep_link_string_as_name=True):
                 filepath = os.path.join(download_path, basename)
 
             if not os.path.exists(filepath):
-                file = open(filepath, "wb")  # open filestream
                 try:
                     print("\n%d: Downloading %s" % (num_files, basename))
-                    # open a connection to this pdf
-                    pdf = urlopen(link)
-                    file.write(pdf.read())
-                    num_files += 1
+
+                    # Streaming, so we can iterate over the response.
+                    r = requests.get(link, stream=True)
+
+                    # Total size in bytes.
+                    total_size = int(r.headers.get('content-length', 0))
+                    block_size = 1024
+                    wrote = 0
+                    with open(filepath, 'wb') as f:
+                        for data in tqdm(r.iter_content(block_size), total=math.ceil(total_size // block_size), unit='KB', unit_scale=True):
+                            wrote = wrote + len(data)
+                            f.write(data)
 
                 except Exception as e:
                     failed += 1
                     print("\nCouldn't download %s" % (basename))
                     print(e)
-                    os.remove(filepath)
-
-                finally:
-                    file.close()  # close file stream
+                    if os.path.exists(filepath):
+                        os.remove(filepath)
             else:
                 print("\nSkipping %s" % (basename))
                 print("File aleady exists")
@@ -88,6 +94,7 @@ if __name__ == '__main__':
         print("Expected two arguments!\n")
         print("The first argument should be the url of the webpage from where you intent to download all pdfs.")
         print("The Second argumnet should be the path to the diectory where you want to keep the downloaded files.")
+        print("Followed by a list of file types you want to download. For e.g .mkv .mp4 .pdf")
         sys.exit(2)
 
     elif not os.path.isdir(inputs[2].strip()):
@@ -97,8 +104,13 @@ if __name__ == '__main__':
     else:
         url = inputs[1].strip()
         download_path = inputs[2].strip()
+        extensions = inputs[3:]
+        extensions = [each.strip() for each in extensions]
+
         try:
-            parse_and_download(url, download_path, keep_link_string_as_name=True)
+            if len(extensions) == 0:
+                extensions = default_extensions
+            parse_and_download(url, download_path, keep_link_string_as_name=True, extensions=extensions)
 
         except KeyboardInterrupt:
             print("\nExiting...")
