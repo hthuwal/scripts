@@ -56,17 +56,17 @@ function cpp() {
     fi
 }
 
+function isNum(){
+    re='^[0-9]+$'
+    if [[ $1 =~ $re ]]
+    then
+        echo 1
+    else
+        echo 0
+    fi
+}
 function activate()
 {
-    function isNum(){
-        re='^[0-9]+$'
-        if [[ $1 =~ $re ]]
-        then
-            echo 1
-        else
-            echo 0
-        fi
-    }
 
     ask=""
     venvs=()
@@ -97,4 +97,62 @@ function activate()
     else
         echo "Pleae enter a valid number between [0 and $max]"
     fi
+}
+
+function shrink-pdf()
+{
+
+	function describe(){
+		msg="Usage:\n\t shrink_pdf input_file output_file quality(optional)\n\n"
+		zero="0: lower quality, smaller size.\n"
+		one="1: for better quality, but slightly larger pdfs.\n"
+		two="2: output similar to Acrobat Distiller 'Prepress Optimized' setting\n"
+		three="3: output similar to the Acrobat Distiller 'Print Optimized' setting\n"
+
+		echo -e $msg$zero$one$two$three
+		return 1
+	}
+
+	num_params=$#
+	if [ $num_params -ge 2 ]
+	then
+		if [ -f "$1" ]
+		then
+			infile="$1"
+			outfile="$2"
+			quality="/ebook"
+		else
+			echo -e "file '$1' does not exist\n"
+			describe
+			return 1
+		fi
+	else
+		describe
+		return 1
+	fi
+	
+	if [ $num_params -eq 3 ]
+	then
+		case "$3" in
+		        0)
+					quality="/screen"			         
+					;;
+		        1)
+					quality="/ebook"
+		            ;;
+		        2)
+					quality="/prepress"
+		            ;;
+		        3)
+					quality="/printer"
+		            ;;
+		        *)
+		            describe
+		            return 1
+		esac
+	fi
+
+	gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS="$quality" -sOutputFile="$outfile"  "$infile"
+	echo "File $infile shrinked to $outfile"
+	return 0
 }
