@@ -127,7 +127,7 @@ function shrink-pdf()
 
 			-i|--input)
 				local infile="$2"
-				if ! [ -f $infile ]; then
+				if ! [ -f "$infile" ]; then
 					echo -e "file '$infile' does not exist\n"
 					usage
 					return 1
@@ -174,20 +174,20 @@ function shrink-pdf()
 	done
 
 	# checking if variables are set or not
-	if [ -z $infile ]; then
+	if [ -z "$infile" ]; then
 		echo -e "Error: No input file specified. Use -h|--help to see the valid options"
 		return 1
 	fi
 
-	if [ -z $outfile ]; then
-		if [ ${infile: -4:4} == ".pdf" ]; then ## filename has extension .pdf
+	if [ -z "$outfile" ]; then
+		if [ "${infile: -4:4}" == ".pdf" ]; then ## filename has extension .pdf
 			outfile=${infile:0: -4}"-shrink.pdf"
 		else
 			outfile=$infile"-shrink.pdf"
 		fi
 	fi
 
-	if [ -z $quality ]; then	
+	if [ -z "$quality" ]; then	
 		quality="/ebook"
 	fi
 
