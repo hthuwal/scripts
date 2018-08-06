@@ -102,56 +102,96 @@ function activate()
 function shrink-pdf()
 {
 
-	function describe(){
-		msg="Usage:\n\t shrink_pdf input_file output_file quality(optional)\n\n"
-		zero="0: lower quality, smaller size.\n"
-		one="1: for better quality, but slightly larger pdfs.\n"
-		two="2: output similar to Acrobat Distiller 'Prepress Optimized' setting\n"
-		three="3: output similar to the Acrobat Distiller 'Print Optimized' setting\n"
+	function usage(){
+		echo -e "Usage: shrink-pdf <-i|--input INPUT_PDF_FILE> <OPTIONS>\n"
+		echo -e "Shrink the INPUT_PDF_FILE\n\n"
 
-		echo -e $msg$zero$one$two$three
-		return 1
+		echo -e "OPTIONS\n"
+		printf "%-25s\t%s\n" "-o|--output" "Specify name of the output file. Default name of the output file is INPUT_PDF_FILE-shrink.pdf"
+		printf "%-25s\t%s\n" "-q|--quality" "Specify output quality [0-3]. Default is 1"
+		printf "%-25s\t%s\n" "" "0: lower quality, smaller size."
+		printf "%-25s\t%s\n" "" "1: for better quality, but slightly larger pdfs."
+		printf "%-25s\t%s\n" "" "2: output similar to Acrobat Distiller 'Prepress Optimized' setting."
+		printf "%-25s\t%s\n" "" "3: output similar to the Acrobat Distiller 'Print Optimized' setting."
 	}
 
-	num_params=$#
-	if [ $num_params -ge 2 ]
-	then
-		if [ -f "$1" ]
-		then
-			infile="$1"
-			outfile="$2"
-			quality="/ebook"
-		else
-			echo -e "file '$1' does not exist\n"
-			describe
-			return 1
-		fi
-	else
-		describe
+	# dealing with command line args
+	while [ "$#" -gt 0 ]
+	do
+		case "$1" in
+
+			-h|--help)
+				usage
+				return 0
+				;;
+
+			-i|--input)
+				local infile="$2"
+				if ! [ -f $infile ]; then
+					echo -e "file '$infile' does not exist\n"
+					usage
+					return 1
+				fi
+				shift
+				;;
+
+			-o|--output)
+				local outfile="$2"
+				shift
+				;;
+
+			-q|--quality)
+				local quality="$2"
+					case "$quality" in
+					        0)
+								quality="/screen"			         
+								;;
+					        1)
+								quality="/ebook"
+					            ;;
+					        2)
+								quality="/prepress"
+					            ;;
+					        3)
+								quality="/printer"
+					            ;;
+					        *)
+								echo -e "Quality shoulb be between [0-3]. Use -h|--help to see the valid options"
+					            return 1
+					            ;;
+					esac
+				shift
+				;;
+			--)
+				break
+				;;
+			-*)
+				echo "Invalid option '$1'. Use -h|--help to see the valid options"
+				return 1
+				;;
+		esac
+		shift
+	done
+
+	# checking if variables are set or not
+	if [ -z $infile ]; then
+		echo -e "Error: No input file specified. Use -h|--help to see the valid options"
 		return 1
 	fi
-	
-	if [ $num_params -eq 3 ]
-	then
-		case "$3" in
-		        0)
-					quality="/screen"			         
-					;;
-		        1)
-					quality="/ebook"
-		            ;;
-		        2)
-					quality="/prepress"
-		            ;;
-		        3)
-					quality="/printer"
-		            ;;
-		        *)
-		            describe
-		            return 1
-		esac
+
+	if [ -z $outfile ]; then
+		if [ ${infile: -4:4} == ".pdf" ]; then ## filename has extension .pdf
+			outfile=${infile:0: -4}"-shrink.pdf"
+		else
+			outfile=$infile"-shrink.pdf"
+		fi
 	fi
 
+	if [ -z $quality ]; then	
+		quality="/ebook"
+	fi
+
+	## attempting to shrink
 	gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS="$quality" -sOutputFile="$outfile"  "$infile"
 	echo "File $infile shrinked to $outfile"
 	return 0
