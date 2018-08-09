@@ -37,6 +37,7 @@ alias vpl_docker='sudo docker run --rm --privileged -p 80:80 -p 443:443 -it --us
 
 alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -crf 25'
 
+alias net_sucks='systemctl restart NetworkManager.service'
 
 # Functions
 function gio() { 
