@@ -65,6 +65,7 @@ function isNum(){
         echo 0
     fi
 }
+
 function activate()
 {
 
@@ -195,4 +196,20 @@ function shrink-pdf()
 	gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS="$quality" -sOutputFile="$outfile"  "$infile"
 	echo "File $infile shrinked to $outfile"
 	return 0
+}
+
+# functio to pad a white background around an image
+function pad()
+{
+	input=$1
+	output=$2
+	padding=$3
+
+	if [ -z "$input" ] || [ -z "$output" ] || [ -z "$padding" ]; then
+		echo -e "Usage:\t pad in_file out_file padding_size.\n\n\t E.g pad in.png out.png 200\n"
+		return 1
+	fi
+	width=$(convert "$1" -print "%w" /dev/null)
+	height=$(convert "$1" -print "%h" /dev/null)
+	convert -background white -gravity center -extent $(echo $width + $padding | bc)x$(echo $height + $padding | bc) "$input" "$output"
 }
