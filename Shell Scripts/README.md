@@ -4,7 +4,7 @@ Contains Functions for doing some video related tasks
 
 ### Dependency
 - ffmpeg
-- [ffpb](https://github.com/althonos/ffpb) (wrapper around ffmpeg to show progress)
+- [ffmpeg-bar](https://github.com/sidneys/ffmpeg-progressbar-cli) (wrapper around ffmpeg to show progress)
 
 ### 1. tox264
 
