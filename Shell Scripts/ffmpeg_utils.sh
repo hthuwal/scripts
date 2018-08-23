@@ -132,9 +132,12 @@ function addsub2all(){
         name="${file_name%.*}"
         ext="${file_name##*.}"
         root_dir=$(dirname "$file")
-        subtiles="$root_dir""/""$name".srt
-        if  [ -f "$subtiles" ] && ([ $ext == "mkv" ] || [ $ext == "mp4" ] || [ $ext == "m4v" ]); then
-            addsub "$file" "$subtiles"
+        subtitles="$root_dir""/""$name".srt
+        if ! [ -f "$subtitles" ]; then
+            subtitles="$root_dir""/""$name".en.srt
+        fi
+        if  [ -f "$subtitles" ] && ([ $ext == "mkv" ] || [ $ext == "mp4" ] || [ $ext == "m4v" ]); then
+            addsub "$file" "$subtitles"
         fi
     done
 }
