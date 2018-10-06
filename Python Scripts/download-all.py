@@ -14,7 +14,27 @@ except ImportError:
     sys.exit(0)
 
 default_extensions = [".pdf"]
-# extensions_to_be_downloaded = [".pdf"]
+
+
+def parse_and_copy_links(url, out_file, extensions=default_extensions):
+    with open(out_file, "w") as f:
+        # open and read the url
+        html = requests.get(url).text
+
+        # creating a BeautifulSoup object, which represents
+        # the document as a nested data structure:
+
+        soup = BeautifulSoup(html, "lxml")
+
+        for tag in soup.findAll('a', href=True):
+            # incase the link is relative to url
+            link = urljoin(url, tag['href'])
+
+            basename = os.path.basename(link)
+            extension = os.path.splitext(basename)[1]
+
+            if extension in extensions:
+                f.write("%s\n" % (link))
 
 
 def parse_and_download(url, download_path, keep_link_string_as_name=True, extensions=default_extensions):
