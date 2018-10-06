@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import os
 import sys
 import requests
@@ -108,35 +109,28 @@ def parse_and_download(url, download_path, keep_link_string_as_name=True, extens
 
 
 if __name__ == '__main__':
-    inputs = sys.argv
+    parser = argparse.ArgumentParser(description='Extract/Download Links')
+    parser.add_argument('url', type=str, help='Url of the Webpage from where you intent to download/extract links.')
+    parser.add_argument('destination', type=str, help='Destination: Should be a directory. Or a FileName if -e is used')
+    parser.add_argument('-e', action='store_true', help='Extract all the relevant links to \
+        output file. (Default action is to download them in the output folder)')
+    parser.add_argument('extensions', type=str, nargs='*', default=default_extensions, help='Space seperated list of file types to be extracted/downloade. For e.g. .mkv .mp4 .pdf')
+    args = parser.parse_args()
 
-    if len(inputs) < 3:
-        print("Expected two arguments!\n")
-        print("The first argument should be the url of the webpage from where you intent to download all pdfs.")
-        print("The Second argumnet should be the path to the diectory where you want to keep the downloaded files.")
-        print("Followed by a list of file types you want to download. For e.g .mkv .mp4 .pdf")
-        sys.exit(2)
-
-    elif not os.path.isdir(inputs[2].strip()):
-        print("The second argument must be a path to a directory!\n")
-        sys.exit(2)
-
-    else:
-        url = inputs[1].strip()
-        download_path = inputs[2].strip()
-        extensions = inputs[3:]
-        extensions = [each.strip() for each in extensions]
-
-        try:
-            if len(extensions) == 0:
-                extensions = default_extensions
-            parse_and_download(url, download_path, keep_link_string_as_name=True, extensions=extensions)
-
-        except KeyboardInterrupt:
-            print("\nExiting...")
-            sys.exit(1)
-
-        except Exception as e:
-            print("Something went wrong!")
-            print(e)
+    try:
+        if args.e:
+            print("Extracting all links ending in: %s\n" % " ".join(args.extensions))
+            parse_and_copy_links(args.url, args.destination, extensions=args.extensions)
+        elif not os.path.isdir(args.destination):
+            print("For default action, The second argument must be a path to a directory!\n")
             sys.exit(2)
+        else:
+            print("Downloading all links ending in: %s\n" % " ".join(args.extensions))
+            parse_and_download(args.url, args.destination, keep_link_string_as_name=True, extensions=args.extensions)
+    except KeyboardInterrupt:
+        print("\nExiting...")
+        sys.exit(1)
+    except Exception as e:
+        print("Something went wrong!")
+        print(e)
+        sys.exit(2)
