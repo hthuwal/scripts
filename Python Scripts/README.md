@@ -26,40 +26,35 @@ optional arguments:
 ```
 
 
-## remove_from_file_names.py
+### :scissors: Trim File Names
 
-This python script removes a set of substrings from the name of the files and folderes in a directory.
+To removes a set of substrings from the name of the files and folders in a directory.
 
-Note: Apart from the last dot of extension if the filename contains extra "." (dots) then these dots are also replaced with spaces.
+Note: Apart from the last dot of extension if the filename contains extra "." (dots) then these dots are also replaced with delimiter(default is space).
 
-**Update**: Script now works recursively on all subdirectories
+**Script**: [trim-file-names.py](trim-file-names.py)
 
-- **Usage**
-	
-	`remove_from_file_names <dir> <substrings>`
+**Usage**
+```
+trim-file-names [-h] [-d DELIM] [-r] directory substrings [substrings ...]
 
-	- **dir**: Target directory
-	- **substings**: Space seperated list of substrings that will be removed if present in the names of files/folders in target directory .
+Trim all file/folder names by removing specific substrings and replacing all
+'.' by delim except the last.
 
-- **Example**
+positional arguments:
+  directory             Path to directory whose content's name needs to be
+                        trimmed.
+  substrings            The substrings that you want to remove from filenames.
 
-	Suppose a folder "Test" contains the files:
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DELIM, --delim DELIM
+                        Delimiter used to replace all '.'. Default is space.
+  -r                    Recurse into the subdirectories.
 
-	- tes.t 
-	- 123.4
-	- (abc).mkv 
+```
 
-	```bash
-	python remove_from_file_names.py path-to-Test "es" "12" "(" "c)"
-	```
-
-	After running the above command the content of the folder "Test" would be
-	
-	- tt 
-	- 3 
-	- ab.mkv
-
-## get_subtitles
+### get_subtitles
 
 Try to download the best subtitles for all the videos present in a folder.
 The path to the folder needs to be passed as command line argument. If no argument is passed, current working directory is searched.
