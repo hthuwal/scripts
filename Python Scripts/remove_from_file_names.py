@@ -32,10 +32,15 @@ def clean(folder, to_be_removed, recurse=True, delim=' '):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
-        folder = sys.argv[1]
-        to_be_removed = sys.argv[2:]
-        clean(folder, to_be_removed)
+    parser = argparse.ArgumentParser(description='Trim all file/folder names by \
+        removing specific substrings and replacing all \'.\' by delim except the last.')
+    parser.add_argument('directory', type=str, help='Path to directory whose content\'s name needs to be trimmed.')
+    parser.add_argument('substrings', type=str, nargs='+', help='The substrings that you want to remove from filenames.')
+    parser.add_argument('-d', '--delim', type=str, default=' ', help='Delimiter used to replae all \'.\'. Defualt is space.')
+    parser.add_argument('-r', action='store_true', help='Recurse into the subdirectories.')
+    args = parser.parse_args()
+
+    if os.path.isdir(args.directory):
+        clean(args.directory, args.substrings, args.r, args.delim)
     else:
-        print("First argument should be the path to a directory")
-        sys.exit()
+        print("Error: %s is not a valid directory." % (args.directory))
