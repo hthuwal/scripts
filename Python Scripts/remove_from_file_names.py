@@ -1,22 +1,20 @@
 #!/usr/bin/env python
 
 import os
-import sys
-
-safe_extensions = [".txt"]
+import argparse
 
 
-def clean(folder, to_be_removed, recurse=True):
+def clean(folder, to_be_removed, recurse=True, delim=' '):
     if len(to_be_removed) > 0:
         for path in os.listdir(folder):
 
             filename, ext = os.path.splitext(path)
 
-            if ext not in safe_extensions:
+            if not filename.startswith('.'):  # Leave the hidden files/folders
                 for string in to_be_removed:
                     filename = filename.replace(string, "").strip()
 
-                filename = " ".join(filename.split('.')).strip()
+                filename = delim.join(filename.split('.')).strip()
                 newpath = filename + ext
 
                 sourcepath = os.path.join(folder, path)
@@ -28,6 +26,7 @@ def clean(folder, to_be_removed, recurse=True):
 
                 if os.path.isdir(targetpath) and recurse:
                     clean(targetpath, to_be_removed)
+                    os.rename(sourcepath, targetpath)
     else:
         print("Nothing to remove!\nPlease pass as arguments(space seperated) the strings that should be removed from the names")
 
