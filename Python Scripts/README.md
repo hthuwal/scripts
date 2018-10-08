@@ -1,27 +1,30 @@
-## download_all
+### :arrow_down_small: Download/Extract multiple links from a url
 
-This python script tries to download all files from a webpage
+The webpage is parsed using BeautifulSoup and all the `<a>` tags with href containing desired extensions are downloaded/extracted.
 
-The webpage is parsed using BeautifulSoup and all the < a > tags with href containing desired extensions are downloaded.
+**Script**: [download-all.py](download-all.py)    
+**Dependencies**: [tqdm](https://github.com/tqdm/tqdm), [BeautifulSoup](https://github.com/getanewsletter/BeautifulSoup4)    
+	`pip install tqdm, beautifulsoup4`
 
-- **Usage:**
+**Usage**    	
+```
+get-all [-h] [-e] url destination [extensions [extensions ...]]
 
-	`download_all <url> <dest> <exts>`
+Extract/Download Links
 
-	- **url**: Url from where to download files.
-	- **dest**: Path to directory where downloaded files will be stored.
-	- **exts**: Space seperated list of extensions of filetypes to be downloaded.
+positional arguments:
+  url          Url of the Webpage from where you intent to download/extract
+               links.
+  destination  Destination: Should be a directory. Or a FileName if -e is used
+  extensions   Space seperated list of file types to be extracted/downloade.
+               For e.g. .mkv .mp4 .pdf
 
-	`download_all <url> <dest> .pdf .mp4 .pptx .csv`
+optional arguments:
+  -h, --help   show this help message and exit
+  -e           Extract all the relevant links to output file. (Default action
+               is to download them in the output folder)
+```
 
-- **Dependencies**:
-	- tqdm: to display progress bar
-
-		`pip install tqdm`
-	
-	- BeautifulSoup 
-	
-		`pip install beautifulsoup4`
 
 ## remove_from_file_names.py
 
