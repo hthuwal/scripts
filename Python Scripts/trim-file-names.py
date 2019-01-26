@@ -38,13 +38,14 @@ if __name__ == '__main__':
         removing specific substrings and replacing all \'.\' by delim except the last.')
     parser.add_argument('directory', type=str, help='Path to directory whose content\'s name needs to be trimmed.')
     parser.add_argument('-s', '--substrings', type=str, nargs='+', help='The substrings that you want to remove from filenames.')
+    parser.add_argument('-a', action='store_true', help='Append the substrings to be removed default list.')
     parser.add_argument('-d', '--delim', type=str, default=' ', help='Delimiter used to replace all \'.\'. Default is space.')
     parser.add_argument('-r', action='store_true', help='Recurse into the subdirectories.')
     args = parser.parse_args()
 
     if not args.substrings:
         args.substrings = USUAL_CRAP
-    else:
+    elif args.a:
         args.substrings += USUAL_CRAP
 
     if os.path.isdir(args.directory):
