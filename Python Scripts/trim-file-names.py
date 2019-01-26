@@ -3,6 +3,8 @@
 import os
 import argparse
 
+USUAL_CRAP = ['720p', 'WEBRip', '2CH', 'x265', 'HEVC-PSA', 'WEB-DL', '1080p', '10bit']
+
 
 def clean(folder, to_be_removed, recurse=True, delim=' '):
     if len(to_be_removed) > 0:
@@ -35,10 +37,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Trim all file/folder names by \
         removing specific substrings and replacing all \'.\' by delim except the last.')
     parser.add_argument('directory', type=str, help='Path to directory whose content\'s name needs to be trimmed.')
-    parser.add_argument('substrings', type=str, nargs='+', help='The substrings that you want to remove from filenames.')
+    parser.add_argument('-s', '--substrings', type=str, nargs='+', help='The substrings that you want to remove from filenames.')
     parser.add_argument('-d', '--delim', type=str, default=' ', help='Delimiter used to replace all \'.\'. Default is space.')
     parser.add_argument('-r', action='store_true', help='Recurse into the subdirectories.')
     args = parser.parse_args()
+
+    if not args.substrings:
+        args.substrings = USUAL_CRAP
+    else:
+        args.substrings += USUAL_CRAP
 
     if os.path.isdir(args.directory):
         clean(args.directory, args.substrings, args.r, args.delim)
