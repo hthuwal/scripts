@@ -79,9 +79,8 @@ function activate()
 			echo "env folder not found."
 			cond=false
 		elif [ -d "env" ]; then
-			echo "Found env folder at "$(realpath "env")
-			source	"env/bin/activate"
 			echo "Activating virtual environment located at: "$(realpath "env")
+			source	"env/bin/activate"
 			cond=false
 		else
 			cd ..
