@@ -68,36 +68,26 @@ function isNum(){
 
 function activate()
 {
+	cwd=$(pwd)
+	home=$HOME
 
-    ask=""
-    venvs=()
-    iter=0
-    while IFS= read line
-        do
-            arr=($line) #splitting line into elements
-            venvs+=(${arr[1]})
-            ask="$ask$iter: ${arr[0]}\n"
-            iter=$(($iter+1))
-        done <"/home/hthuwal/.venvs_list"
-
-
-
-    if [ "$#" -eq 1 ]
-    then
-        input=$1
-    else
-        echo -e $ask
-        read input
-    fi
-
-    max=$(($iter - 1))
-
-    if [[ $(isNum $input) -eq 1 ]] && [ $input -le $max ] && [ $input -ge 0 ]
-    then
-        source ${venvs[$input]}
-    else
-        echo "Pleae enter a valid number between [0 and $max]"
-    fi
+	cond=true
+	while "$cond"
+	do
+		dir=$(pwd)
+		if [ "$dir" == "$home" ]; then
+			echo "env folder not found."
+			cond=false
+		elif [ -d "env" ]; then
+			echo "Found env folder at "$(realpath "env")
+			source	"env/bin/activate"
+			echo "Activating virtual environment located at: "$(realpath "env")
+			cond=false
+		else
+			cd ..
+		fi
+	done
+	cd "$cwd"
 }
 
 function shrink-pdf()
