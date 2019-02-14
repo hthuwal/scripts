@@ -202,3 +202,14 @@ function pad()
 	height=$(convert "$1" -print "%h" /dev/null)
 	convert -background white -gravity center -extent $(echo $width + $padding | bc)x$(echo $height + $padding | bc) "$input" "$output"
 }
+
+# Find Files based on size
+# +1G files bigger than 1Gigs
+# -1G files smaller than 1Gigs
+function ffbs()
+{
+	dir="$1"
+	thresh="$2"
+
+	find "$dir" -type f -size "$2" | xargs -d '\n' du -sh
+}
