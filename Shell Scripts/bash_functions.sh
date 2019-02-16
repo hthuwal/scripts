@@ -7,7 +7,7 @@ function rename_media(){
     	if [[ -d $1 ]]
     	then
 	    	cur=$(pwd)
-			cd $1
+			cd "$1"
 	        for filename in *
 	        do
 	          	tmp="$(echo "$filename" | tr '[A-Z]' '[a-z]')"
@@ -29,7 +29,7 @@ function rename_media(){
 	              ;;
 	          	esac
 	        done
-	        cd $cur
+	        cd "$cur"
         else
         	echo $1 is not a directory
         fi
