@@ -12,22 +12,29 @@ function rename_media(){
 	        do
 	          	tmp="$(echo "$filename" | tr '[A-Z]' '[a-z]')"
 	          	case "$filename" in
-	          	20*) ##name already starts with 2018 or 20** something
-	        	  echo "Don't need to rename "$filename
-	        	;;
-	            *.MOV|*.mov) 
-	              mv -iv "$filename" "$(exiftool -s -CreationDate -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_$tmp
-	              ;;
-	            *.JPG|*.jpg)
-	              mv -iv "$filename" "$(exiftool -s -CreateDate -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_$tmp
-	              ;;
-	            *.MP4|*.mp4|*.AVI|*.avi)
-	              mv -iv "$filename" "$(exiftool -s -FileModifyDate -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_$tmp
-	              ;;
-	            *)
-	              echo 'Not a *.jpg or a *.mov!'
-	              ;;
+		          	
+		          	20??_*) date="fine" ;;
+		            
+		            *.MOV|*.mov|*.wmv|*.WMV) date="-CreationDate" ;;
+		            
+		            *.JPG|*.jpg) date="-CreateDate" ;;
+		            
+		            *.MP4|*.mp4) date="-MediaCreateDate" ;;
+		            
+		            *.AVI|*.avi) date="-DateTimeOriginal" ;;
+		            
+		            *) date="" ;;
 	          	esac
+
+	          	if [[ $date == "fine" ]]; then
+	          		echo "Don't need to rename "$filename;
+
+	          	elif [[ ! -z $date ]]; then	
+					mv -iv "$filename" "$(exiftool -s $date -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_$tmp
+	          	
+	          	else
+	          		echo "$filename" is not of a supported format.
+	          	fi
 	        done
 	        cd "$cur"
         else
