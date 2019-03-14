@@ -26,7 +26,9 @@ optional arguments:
 ```
 
 <br>
+
 ---
+
 ### 🔑 Is Password Safe?
 
 Wondering whether the password you use have already been leaked or not? Try this script.
@@ -48,6 +50,7 @@ Options:
 ```
 
 <br>
+
 ---
 
 ### :scissors: Trim File Names
@@ -79,7 +82,9 @@ optional arguments:
 ```
 
 <br>
+
 ---
+
 ### :tv: Play Random Video
 
 Ever wanted to play a random episode of a TV series you have? Well then this is the script for you. 
@@ -102,7 +107,9 @@ optional arguments:
 ```
 
 <br>
+
 ---
+
 ### :pencil2: Auto Rename Videos
 
 Automatically rename videos to their movie titles based on their metadata.
@@ -125,7 +132,9 @@ optional arguments:
 ```
 
 <br>
+
 ---
+
 ### get_subtitles
 
 Try to download the best subtitles for all the videos present in a folder.
