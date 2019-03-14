@@ -15,6 +15,7 @@ Assumption:
     e.g. 1.mp4, 2.mp4 etc...
 """
 
+
 def clean_filename(filename, whitelist=valid_filename_chars, replace=' '):
     # replace spaces
     # for r in replace:
@@ -39,12 +40,7 @@ def rename(src):
 
     proposed_changes = {}
     for file in os.listdir(src):
-        num, ext = os.path.splitext(file)
-        try:
-            num = int(num.split()[0])
-        except Exception:
-            print("File names should start with a number denoting its order among all the files.")
-            sys.exit()
+        _, ext = os.path.splitext(file)
 
         file = os.path.join(src, file)
         command = ['mediainfo', '--Inform=General;%Movie%', file]
@@ -54,7 +50,7 @@ def rename(src):
 
         if new_name:
             new_name = clean_filename(new_name)
-            new_name = "%02d" % num + " " + new_name + ext
+            new_name = new_name + ext
             new_name = os.path.join(src, new_name)
             print("Will rename:\t%s\tto\t%s" % (os.path.basename(file), os.path.basename(new_name)))
             proposed_changes[file] = new_name
@@ -66,6 +62,7 @@ def rename(src):
             os.rename(file, proposed_changes[file])
     else:
         print("No changes will be made.")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=des)
