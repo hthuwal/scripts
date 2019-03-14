@@ -27,6 +27,28 @@ optional arguments:
 
 <br>
 ---
+### 🔑 Is Password Safe?
+
+Wondering whether the password you use have already been leaked or not? Try this script.
+
+The scripts use the API provided by ["have I been pwned"](https://haveibeenpwned.com) to checker whether a password has been leaked or not.
+
+**Note: The entire password is not sent over the network. Only the first 5 characters of the SHA1 of the password are sent over the network.**
+
+**Script**: [is-password-safe.py](is-password-safe.py)
+
+**Usage**
+```
+is-password-safe.py [OPTIONS] PASSWORD_FILE
+
+  Check if passwords (one on each line) in PASSWORD_FILE are safe or not.
+
+Options:
+  --help  Show this message and exit.
+```
+
+<br>
+---
 
 ### :scissors: Trim File Names
 
