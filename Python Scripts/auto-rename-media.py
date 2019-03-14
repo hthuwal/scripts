@@ -2,17 +2,12 @@ import argparse
 import os
 import string
 import subprocess
-import sys
 import unicodedata
 
 valid_filename_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
 char_limit = 255
 des = """
-Rename Video Files based on their titles.
-
-Assumption:
-    Video are named as per their order.
-    e.g. 1.mp4, 2.mp4 etc...
+Rename a video or video files in a directory to their respective "Movie Name" from their metadata.
 """
 
 
@@ -33,29 +28,49 @@ def clean_filename(filename, whitelist=valid_filename_chars, replace=' '):
     return cleaned_filename[:char_limit]
 
 
-def rename(src):
-    if not os.path.isdir(src):
-        print("%s is not a path to a valid directory" % (src))
-        sys.exit(1)
+def rename_video(video):
+    src = os.path.dirname(video)
+    video_name = os.path.basename(video)
+    _, ext = os.path.splitext(video)
 
+    command = ['mediainfo', '--Inform=General;%Movie%', video]
+    process = subprocess.Popen(command, stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    new_name = output.decode().strip()
+
+    if new_name:
+        new_name = clean_filename(new_name)
+        new_name = new_name + ext
+        new_name = os.path.join(src, new_name)
+        print("Will rename:\n\t%s\tto\t%s" % (video_name, os.path.basename(new_name)))
+    else:
+        print("Unable to find Movie Name from metadata of %s\n" % video_name)
+
+    return new_name
+
+
+def rename_all_in_dir(src):
     proposed_changes = {}
     for file in os.listdir(src):
-        _, ext = os.path.splitext(file)
-
         file = os.path.join(src, file)
-        command = ['mediainfo', '--Inform=General;%Movie%', file]
-        process = subprocess.Popen(command, stdout=subprocess.PIPE)
-        output, error = process.communicate()
-        new_name = output.decode().strip()
-
+        new_name = rename_video(file)
         if new_name:
-            new_name = clean_filename(new_name)
-            new_name = new_name + ext
-            new_name = os.path.join(src, new_name)
-            print("Will rename:\t%s\tto\t%s" % (os.path.basename(file), os.path.basename(new_name)))
             proposed_changes[file] = new_name
 
-    what_to_do = input("\nEnter yes to proceed with the changes: ").strip()
+    return proposed_changes
+
+
+def rename(folder_or_video):
+    proposed_changes = {}
+
+    if os.path.isdir(folder_or_video):
+        proposed_changes = rename_all_in_dir(folder_or_video)
+    else:
+        new_name = rename_video(folder_or_video)
+        if new_name:
+            proposed_changes = {folder_or_video: new_name}
+
+    what_to_do = input("\nEnter yes to proceed with the changes: ")
     if what_to_do.lower() == "yes":
         for file in proposed_changes:
             print("Renaming:\t%s\tto\t%s" % (os.path.basename(file), os.path.basename(proposed_changes[file])))
@@ -66,6 +81,6 @@ def rename(src):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=des)
-    parser.add_argument('src', type=str, help='Path to directory containing video files')
+    parser.add_argument('src', type=str, help='Path to a video or directory containing video files')
     args = parser.parse_args()
     rename(args.src)
