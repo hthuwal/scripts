@@ -113,7 +113,7 @@ function addsub(){
         srt="srt"
     fi
     
-    ffmpeg-bar -hwaccel vaapi -i "$subtitles" -i "$1" -c copy -c:s $srt "$dest_file"
+    ffmpeg-bar -hwaccel vaapi -i "$subtitles" -i "$1" -c copy -c:s $srt -disposition:s:0 default "$dest_file"
 
     if [ $? == 0 ]; then
         echo -e "Subtiles added successfullly\n"
