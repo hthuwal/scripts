@@ -1,10 +1,15 @@
+# clipboard
+alias xp="xclip -out -selection clipboard"
+
 alias youtube="youtube-dl -c -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mkv"
 alias youmusic="youtube-dl -c -f bestaudio[ext=m4a] -x --audio-format mp3"
 alias subs="subliminal download -l en"
 alias bcp="rsync -ah --info=progress2"
+alias slideshow="find . * | mpv -fs --image-display-duration=1 --playlist=-"
+
 #python
 alias pie="python3.6"
-
+alias subl="subl3"
 alias r='ranger'
 alias o='xdg-open'
 
@@ -39,13 +44,7 @@ alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -c
 
 alias net_sucks='systemctl restart NetworkManager.service'
 
-# Functions
-function gio() { 
-    curl -L -s https://www.gitignore.io/api/$@ ;
-}
-
-.  "/home/hthuwal/dev/Scripts/Shell Scripts/ffmpeg_utils.sh" 
-.  "/home/hthuwal/dev/Scripts/Shell Scripts/bash_functions.sh" 
+alias iitd='ssh -D 8123 -C -q -N sri'
 
 xsv-head() {
     lines=${2:-100}
