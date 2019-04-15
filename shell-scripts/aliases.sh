@@ -1,3 +1,11 @@
+# Kitty Aliases
+if [[ $TERM == "xterm-kitty" ]]
+then
+	alias kcat="kitty +kitten icat"
+	alias kdiff="kitty +kitten diff"
+fi
+
+
 # clipboard
 alias xp="xclip -out -selection clipboard"
 
