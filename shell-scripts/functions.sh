@@ -86,7 +86,7 @@ function activate()
 	while "$cond"
 	do
 		dir=$(pwd)
-		if [ "$dir" == "$home" ]; then
+		if [[ "$dir" == "$home" ]]; then
 			echo "env folder not found."
 			cond=false
 		elif [ -d "env" ]; then
