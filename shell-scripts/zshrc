@@ -51,8 +51,7 @@ zle -N self-insert url-quote-magic
 export ZSH="$HOME/.oh-my-zsh"
 ENABLE_CORRECTION="true"
 
-
-# ------------------------------ OH-MY-ZSH THEME ----------------------------- #
+# ------------------------------ OH-MY-ZSH SPACESHIP THEME ----------------------------- #
 
 ZSH_THEME="spaceship"
 
@@ -148,6 +147,25 @@ unsetopt share_history
 # ############################################################################ #
 #                                     HACKS                                    #
 # ############################################################################ #
+
+# ---------------------- MAKE PAINFULLY SLOW PASTE FAST ---------------------- #
+
+# https://github.com/zsh-users/zsh-autosuggestions/issues/238#issuecomment-389324292
+
+# This speeds up pasting with autosuggest
+# https://github.com/zsh-users/zsh-autosuggestions/issues/238
+pasteinit() {
+  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+  zle -N self-insert url-quote-magic
+}
+
+pastefinish() {
+  zle -N self-insert $OLD_SELF_INSERT
+}
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
+
+# -------------------------- REMOVE WEIRD LS COLORS -------------------------- #
 
 # http://stackoverflow.com/a/14864141
 PROMPT_EOL_MARK=''
