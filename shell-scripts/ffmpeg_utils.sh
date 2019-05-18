@@ -17,9 +17,8 @@ function convto() {
     fi
 
     dest_file="$dest_dir""/""$file_name"
-    
     echo "Trying to convert to $format.."
-    ffmpeg-bar -hwaccel vaapi -i "$1" -map 0 -c:a copy -c:s copy -c:v "$format" "$dest_file"   
+    ffmpeg-bar -i "$1" -map 0 -c:a copy -c:s copy -c:v "$format" "$dest_file"   
 }
 
 function scale() {
@@ -39,7 +38,7 @@ function scale() {
     dest_file=$root_dir/"$width"x"$height"_"$file_name"
 
     echo -e "Scaling...\n"
-    ffmpeg-bar -hwaccel vaapi -i "$1" -vf scale="$width"x"$height" "$dest_file"  
+    ffmpeg-bar -i "$1" -vf scale="$width"x"$height" "$dest_file"  
 }
 
 function tomp3(){
@@ -54,7 +53,7 @@ function tomp3(){
     mkdir mp3_tmp
     for i in *.$1
     do 
-        (ffmpeg-bar -hwaccel vaapi -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
+        (ffmpeg-bar -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
         if [ $? -eq 0 ]
         then
             echo "Conversion successful"
@@ -87,7 +86,7 @@ function clipVideo(){
     dest_file="$dest_dir""/""$start""to""$end""of""$file_name"
     dest_file=$(sed "s/:/_/g" <<< $dest_file)
     echo -e "\nClipping $file_name from $start to $end\n"
-    ffmpeg-bar -hwaccel vaapi -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
+    ffmpeg-bar -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
 }
 
 function addsub(){
@@ -113,7 +112,7 @@ function addsub(){
         srt="srt"
     fi
     
-    ffmpeg-bar -hwaccel vaapi -i "$subtitles" -i "$1" -c copy -c:s $srt -disposition:s:0 default "$dest_file"
+    ffmpeg-bar -i "$subtitles" -i "$1" -c copy -c:s $srt -disposition:s:0 default "$dest_file"
 
     if [ $? == 0 ]; then
         echo -e "Subtiles added successfullly\n"
