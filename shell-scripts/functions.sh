@@ -57,10 +57,12 @@ function cpp() {
     then    
         echo "g++ $1 && time ./a.out < $2"
         g++ $1 && time ./a.out < $2
+        rm a.out
     elif [[ $num_params -eq 1 ]]
     then
         echo "g++ $1 && time ./a.out"
         g++ $1 && time ./a.out
+        rm a.out
     else
         echo -e "Atleast one argmuent required"
         echo -e "\nUsage:\n\n\tcpp file.cpp input_file(optional)\n"
