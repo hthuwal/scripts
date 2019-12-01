@@ -24,8 +24,6 @@ key[ShiftTab]="${terminfo[kcbt]}"
 #                          SCRIPTS, ALIASES, FUNCTIONS                         #
 # ############################################################################ #
 
-# AutoJump
-[[ -s /etc/profile.d/autojump.zsh ]] && source /etc/profile.d/autojump.zsh
 
 local scripts="$HOME/dev/Scripts/shell-scripts"
 source "$scripts/aliases.sh"
@@ -83,19 +81,22 @@ SPACESHIP_VENV_COLOR=198
 # ----------------------------- OH-MY-ZSH PLUGINS ---------------------------- #
 
 plugins=(
-	# node npm
+  # node npm
   copyfile
-	docker
-	colored-man-pages command-not-found
-    
-    # Python
-	python pip pep8 pylint pyenv
-    
-    # From https://github.com/zsh-users/
-	zsh-syntax-highlighting 
+  docker
+  colored-man-pages command-not-found
+
+  # Python
+  python pip pep8 pylint pyenv
+
+  # From https://github.com/zsh-users/
+  zsh-syntax-highlighting 
   zsh-completions 
   zsh-autosuggestions
   history-substring-search
+
+  # From https://github.com/skywind3000/z.lua
+  z.lua
 )
 
 # Load oh-my-zsh

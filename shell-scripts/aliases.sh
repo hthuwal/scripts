@@ -54,8 +54,10 @@ alias vpl_docker='sudo docker run --rm --privileged -p 80:80 -p 443:443 -it --us
 
 # ------------------------------- Miscellaneous ------------------------------ #
 
+alias j='z'
 alias subl="subl3"
 alias r='ranger'
+alias rc='ranger --choosedir="$HOME/.rangerdir"; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 alias o='xdg-open'
 alias subs="subliminal download -l en"
 alias bcp="rsync -ah --info=progress2"
