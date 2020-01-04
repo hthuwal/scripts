@@ -95,7 +95,8 @@ plugins=(
 	zsh-completions 
 	zsh-autosuggestions
 	history-substring-search
-
+	zsh-interactive-cd
+	
 	# From https://github.com/skywind3000/z.lua
 	z.lua
 )
