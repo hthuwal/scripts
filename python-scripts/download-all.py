@@ -18,24 +18,27 @@ default_extensions = [".pdf"]
 
 
 def parse_and_copy_links(url, out_file, extensions=default_extensions):
+    # open and read the url
+    html = requests.get(url).text
+
+    # creating a BeautifulSoup object, which represents
+    # the document as a nested data structure:
+
+    soup = BeautifulSoup(html, "lxml")
+    urls = set()
+    for tag in tqdm(soup.findAll('a', href=True)):
+        # incase the link is relative to url
+        link = urljoin(url, tag['href'])
+
+        basename = os.path.basename(link)
+        extension = os.path.splitext(basename)[1]
+
+        if extension in extensions and url not in urls:
+            urls.add(link)
+
+    print(f"Writing {len(urls)} unique urls to {out_file}")
     with open(out_file, "w") as f:
-        # open and read the url
-        html = requests.get(url).text
-
-        # creating a BeautifulSoup object, which represents
-        # the document as a nested data structure:
-
-        soup = BeautifulSoup(html, "lxml")
-
-        for tag in soup.findAll('a', href=True):
-            # incase the link is relative to url
-            link = urljoin(url, tag['href'])
-
-            basename = os.path.basename(link)
-            extension = os.path.splitext(basename)[1]
-
-            if extension in extensions:
-                f.write("%s\n" % (link))
+        f.write("%s" % ("\n".join(urls)))
 
 
 def parse_and_download(url, download_path, keep_link_string_as_name=True, extensions=default_extensions):
