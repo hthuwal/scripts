@@ -8,12 +8,16 @@ fi
 
 # --------------------------------- Clipboard -------------------------------- #
 
-alias xp="xclip -out -selection clipboard"
-alias xpi="xp -t image/png"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	alias xp="pbpaste"
+elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+	alias xp="xclip -out -selection clipboard"
+	alias xpi="xp -t image/png"
+fi
 
 # ------------------------------------ MPV ----------------------------------- #
 
-alias play_selection='mpv "$(xclip -o)"'
+alias play_selection='mpv "$(xp)"'
 alias slideshow="find . * | mpv -fs --image-display-duration=1 --playlist=-"
 
 # ----------------------------- Downloading stuff ---------------------------- #
@@ -25,7 +29,7 @@ alias pd='aria2c --file-allocation=none -c -x 16 -s 16'
 
 # ---------------------------------- python ---------------------------------- #
 
-alias pie="python3.6"
+alias pie="python3"
 alias ptpy='ptpython'
 
 # ------------------------------------ git ----------------------------------- #
@@ -33,17 +37,21 @@ alias ptpy='ptpython'
 alias gst="git status"
 alias ga="git add"
 alias gc='git commit'
+alias gch='git checkout'
 alias gp='git push origin master'
 alias gpl='git pull origin master'
 alias gl='git log --branches --remotes --tags --graph --oneline --decorate'
-alias gcm='git checkout master'
+alias gtm='git stash && git checkout master'
+alias gb='git checkout - && git stash pop'
 
 # ------------------------------- Arch related ------------------------------- #
 
-alias remorphans='sudo pacman -Rns $(pacman -Qtdq)'
-alias remcache='sudo paccache -r'
-alias cleanup='yay -Sc'
-alias remove='yay -Rcns'
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	alias remorphans='sudo pacman -Rns $(pacman -Qtdq)'
+	alias remcache='sudo paccache -r'
+	alias cleanup='yay -Sc'
+	alias remove='yay -Rcns'
+fi
 
 # ---------------------------------- Docker ---------------------------------- #
 
@@ -55,21 +63,19 @@ alias vpl_docker='sudo docker run --rm --privileged -p 80:80 -p 443:443 -it --us
 # ------------------------------- Miscellaneous ------------------------------ #
 
 alias j='z'
-alias subl="subl3"
 alias r='ranger'
 alias rc='ranger --choosedir="$HOME/.rangerdir"; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
-alias o='xdg-open'
 alias subs="subliminal download -l en"
 alias bcp="rsync -ah --info=progress2"
 alias gapdf='wget -A pdf -m -p -E -k -K -np -nd'
 alias vi='vim'
-alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -crf 25'
-alias net_sucks='systemctl restart NetworkManager.service'
-alias iitd_proxy='ssh -D 8123 -C -q -N sri'
 
-xsv-head() {
-    lines=${2:-100}
-    xsv cat -n rows -- $1 | head -n $lines | xsv table | less -S
-}
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	alias o='open'
+elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+	alias subl="subl3"
+	alias o='xdg-open'
+	alias net_sucks='systemctl restart NetworkManager.service'
+fi
 
 

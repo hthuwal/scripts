@@ -251,3 +251,9 @@ function ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
+function xsv-head() {
+    lines=${2:-100}
+    xsv cat -n rows -- $1 | head -n $lines | xsv table | less -S
+}
+
