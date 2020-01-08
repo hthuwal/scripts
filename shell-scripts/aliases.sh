@@ -1,4 +1,6 @@
-# -------------------------- Kitty Specific Aliases -------------------------- #
+# ---------------------------------------------------------------------------- #
+#                            Kitty Specific Aliases                            #
+# ---------------------------------------------------------------------------- #
 
 if [[ $TERM == "xterm-kitty" ]]
 then
@@ -6,7 +8,9 @@ then
 	alias kdiff="kitty +kitten diff"
 fi
 
-# --------------------------------- Clipboard -------------------------------- #
+# ---------------------------------------------------------------------------- #
+#                                   Clipboard                                  #
+# ---------------------------------------------------------------------------- #
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	alias xp="pbpaste"
@@ -15,36 +19,53 @@ elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 	alias xpi="xp -t image/png"
 fi
 
-# ------------------------------------ MPV ----------------------------------- #
+# ---------------------------------------------------------------------------- #
+#                                      MPV                                     #
+# ---------------------------------------------------------------------------- #
 
 alias play_selection='mpv "$(xp)"'
 alias slideshow="find . * | mpv -fs --image-display-duration=1 --playlist=-"
 
-# ----------------------------- Downloading stuff ---------------------------- #
+# ---------------------------------------------------------------------------- #
+#                               Downloading stuff                              #
+# ---------------------------------------------------------------------------- #
 
 alias youtube-dl-aria="youtube-dl --external-downloader 'aria2c' --external-downloader-args '--file-allocation=none -c -x 16 -s 16'" 
 alias youtube="youtube-dl -c -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mkv"
 alias youmusic="youtube-dl -c -f 'bestaudio[ext=m4a]' -x --audio-format mp3"
 alias pd='aria2c --file-allocation=none -c -x 16 -s 16' 
 
-# ---------------------------------- python ---------------------------------- #
+# ---------------------------------------------------------------------------- #
+#                                    python                                    #
+# ---------------------------------------------------------------------------- #
 
 alias pie="python3"
 alias ptpy='ptpython'
 
-# ------------------------------------ git ----------------------------------- #
+# ---------------------------------------------------------------------------- #
+#                                      git                                     #
+# ---------------------------------------------------------------------------- #
+
+# -------------------------------- What I use -------------------------------- #
 
 alias gst="git status"
+alias gs="git stash --include-untracked"
+alias gsp="git stash pop"
+alias gtm='git stash --include-untracked && git checkout master'
+alias gb='git checkout - && git stash pop'
+alias gch='git checkout'
+alias gl='git log --branches --remotes --tags --graph --oneline --decorate'
+
+# ------------------------------- What I don't ------------------------------- #
+
 alias ga="git add"
 alias gc='git commit'
-alias gch='git checkout'
 alias gp='git push origin master'
 alias gpl='git pull origin master'
-alias gl='git log --branches --remotes --tags --graph --oneline --decorate'
-alias gtm='git stash && git checkout master'
-alias gb='git checkout - && git stash pop'
 
-# ------------------------------- Arch related ------------------------------- #
+# ---------------------------------------------------------------------------- #
+#                                 Arch related                                 #
+# ---------------------------------------------------------------------------- #
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	alias remorphans='sudo pacman -Rns $(pacman -Qtdq)'
@@ -53,14 +74,18 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	alias remove='yay -Rcns'
 fi
 
-# ---------------------------------- Docker ---------------------------------- #
+# ---------------------------------------------------------------------------- #
+#                                    Docker                                    #
+# ---------------------------------------------------------------------------- #
 
 alias drmi='sudo docker rmi $(sudo docker images -q)'
 alias drmc='sudo docker rm $(sudo docker ps -a -q)'
 alias dkillall='sudo docker kill $(sudo docker ps -a -q)'
 alias vpl_docker='sudo docker run --rm --privileged -p 80:80 -p 443:443 -it --user root hthuwal/vpl_docker bash -c "service vpl-jail-system start; bash"'
 
-# ------------------------------- Miscellaneous ------------------------------ #
+# ---------------------------------------------------------------------------- #
+#                                 Miscellaneous                                #
+# ---------------------------------------------------------------------------- #
 
 alias j='z'
 alias r='ranger'
