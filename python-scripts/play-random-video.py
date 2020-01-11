@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import os
@@ -45,7 +45,8 @@ def get_cmd():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Randomly play a video from a given directory.')
+    parser = argparse.ArgumentParser(
+        description='Randomly play a video from a given directory.')
     parser.add_argument('dir', help='path to directory containing videos.')
     args = parser.parse_args()
     play(args.dir)
