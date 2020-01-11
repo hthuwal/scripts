@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import platform
 import random
 import subprocess
 import sys
@@ -24,8 +25,23 @@ def play(path):
                 all_files.append(os.path.join(root_dir, file))
 
     video = random.sample(all_files, 1)
-    subprocess.Popen(["xdg-open", video[0]])
-    print(video[0])
+    cmd = get_cmd()
+    if cmd is not None:
+        print(f"Playing video: {video[0]}")
+        subprocess.Popen([cmd, video[0]])
+    else:
+        print("Unsupported OS.")
+
+
+def get_cmd():
+    os_type = platform.system()
+    if (os_type == "Darwin"):
+        return "open"
+
+    if (os_type == "Linux"):
+        return "xdg-open"
+
+    return None
 
 
 if __name__ == '__main__':

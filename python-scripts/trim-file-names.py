@@ -3,7 +3,7 @@
 import os
 import argparse
 
-USUAL_CRAP = ['720p', 'WEBRip', '2CH', 'x265', 'HEVC-PSA', 'WEB-DL', '1080p', '10bit']
+USUAL_CRAP = ['720p', 'WEBRip', '2CH', 'x265', 'HEVC-PSA', 'WEB-DL', '1080p', '10bit', '6CH', 'BrRip', ]
 
 
 def clean(folder, to_be_removed, recurse=True, delim=' '):
