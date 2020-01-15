@@ -97,6 +97,9 @@ plugins=(
 	history-substring-search
 	zsh-interactive-cd
 	
+	#json
+	jsontools
+	
 	# From https://github.com/skywind3000/z.lua
 	z.lua
 )

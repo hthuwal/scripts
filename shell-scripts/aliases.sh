@@ -55,6 +55,7 @@ alias gtm='git stash --include-untracked && git checkout master'
 alias gb='git checkout - && git stash pop'
 alias gch='git checkout'
 alias gl='git log --branches --remotes --tags --graph --oneline --decorate'
+alias gcb='git rev-parse --abbrev-ref HEAD'
 
 # ------------------------------- What I don't ------------------------------- #
 
