@@ -106,6 +106,10 @@ plugins=(
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
+# TODO: find better way to do this
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	RPROMPT="[%D{%f/%m/%y} | %D{%H:%M:%S}]"
+fi
 
 # ############################################################################ #
 #                              CUSTOM KEYBINDINGS                              #
