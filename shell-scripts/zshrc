@@ -31,6 +31,7 @@ fi
 source "$scripts/aliases.sh"
 source "$scripts/functions.sh"
 source "$scripts/ffmpeg_utils.sh"
+source "$scripts/kube.sh"
 
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
