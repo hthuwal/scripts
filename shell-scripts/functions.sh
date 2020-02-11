@@ -252,6 +252,24 @@ function ex ()
   fi
 }
 
+# Function takes number of digits as argument
+# Generates a random number with that many digits
+function random_num {
+	num_digits=$1
+	NUMBER=$(cat /dev/urandom | LC_CTYPE=C tr -dc '0-9' | fold -w 256 | head -n 1 | sed -e 's/^0*//' | head -c $num_digits)
+	if [[ "$NUMBER" == "" ]]; then
+	  NUMBER=0
+	fi
+	echo $NUMBER
+}
+
+# Function takes number of characters as arguments
+# Generates a random alpha-numeric string with that many characters
+function random_string {
+	num_chars=$1
+	echo $(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w $num_chars | head -n 1)
+}
+
 function xsv-head() {
     lines=${2:-100}
     xsv cat -n rows -- $1 | head -n $lines | xsv table | less -S
