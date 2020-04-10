@@ -29,3 +29,6 @@ alias kdelno='kubectl delete node'
 
 alias kl='kubectl logs'
 alias klf='kubectl logs -f'
+
+# ----------------------------------- SCP ------------------------------------ #
+alias kcp='kubectl cp'
