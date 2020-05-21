@@ -97,6 +97,7 @@ alias gapdf='wget -A pdf -m -p -E -k -K -np -nd'
 alias vi='vim'
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
+	alias tac='tail -r'
 	alias o='open'
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 	alias subl="subl3"
@@ -104,4 +105,4 @@ elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 	alias net_sucks='systemctl restart NetworkManager.service'
 fi
 
-
+alias wtf_scroll='tput rmcup'
