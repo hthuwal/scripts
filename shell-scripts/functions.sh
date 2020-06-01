@@ -206,14 +206,20 @@ function pad()
 	input=$1
 	output=$2
 	padding=$3
+	color=$4
 
 	if [ -z "$input" ] || [ -z "$output" ] || [ -z "$padding" ]; then
 		echo -e "Usage:\t pad in_file out_file padding_size.\n\n\t E.g pad in.png out.png 200\n"
 		return 1
 	fi
+
+	if [ -z "$color" ]; then
+		color="black"
+	fi
+
 	width=$(convert "$1" -print "%w" /dev/null)
 	height=$(convert "$1" -print "%h" /dev/null)
-	convert -background white -gravity center -extent $(echo $width + $padding | bc)x$(echo $height + $padding | bc) "$input" "$output"
+	convert -background $color -gravity center -extent $(echo $width + $padding | bc)x$(echo $height + $padding | bc) "$input" "$output"
 }
 
 # Find Files based on size
@@ -275,3 +281,20 @@ function xsv-head() {
     xsv cat -n rows -- $1 | head -n $lines | xsv table | less -S
 }
 
+## Function to print stuff at the center of the screen
+function make_heading {
+  columns=$(tput cols)
+  title=$1
+  printf '%*s\n' "${columns}" '' | tr ' ' =
+  printf "%*s\n" $(((${#title}+$columns)/2)) "$title"
+  printf '%*s\n' "${columns}" '' | tr ' ' =
+}
+
+# ------------------------------------ FUN ----------------------------------- #
+function fun {
+	if command -v cowsay &> /dev/null && command -v fortune &> /dev/null; then
+		cowlist=( $(cowsay -l | sed "1 d") );
+		thechosencow=${cowlist[$(($RANDOM % ${#cowlist[*]}))]}
+		fortune | cowsay -f "$thechosencow" 
+	fi
+}
