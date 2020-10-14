@@ -79,10 +79,12 @@ fi
 #                                    Docker                                    #
 # ---------------------------------------------------------------------------- #
 
-alias drmi='sudo docker rmi $(sudo docker images -q)'
-alias drmc='sudo docker rm $(sudo docker ps -a -q)'
-alias dkillall='sudo docker kill $(sudo docker ps -a -q)'
-alias vpl_docker='sudo docker run --rm --privileged -p 80:80 -p 443:443 -it --user root hthuwal/vpl_docker bash -c "service vpl-jail-system start; bash"'
+alias dcls='docker container ls -a'
+alias dils='docker image ls -a'
+alias dirm='docker image rm $(docker image ls -q)'
+alias dcrm='docker container rm $(docker container ls -a -q)'
+alias dkillall='docker kill $(docker ps -a -q)'	
+alias vpl_docker='docker run --rm --privileged -p 80:80 -p 443:443 -it --user root hthuwal/vpl_docker bash -c "service vpl-jail-system start; bash"'
 
 # ---------------------------------------------------------------------------- #
 #                                 Miscellaneous                                #
