@@ -24,16 +24,17 @@ key[ShiftTab]="${terminfo[kcbt]}"
 # ############################################################################ #
 
 
-local scripts="$HOME/dev/Scripts/shell-scripts"
+local scripts="$HOME/dev/scripts/shell-scripts"
 if [[ "$OSTYPE" == "darwin"* ]]; then
-	source "$HOME/.dotfiles/appd.sh"
+	source "$HOME/work/for-work-by-me/appd-scripts/appd.sh"
 fi
 source "$scripts/aliases.sh"
 source "$scripts/functions.sh"
 source "$scripts/ffmpeg_utils.sh"
 source "$scripts/kube.sh"
 
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=/usr/local/sbin:$HOME/bin:$HOME/.local/bin:$PATH
+export GOPATH=$HOME/bin/go
 
 # Kill entire arguments on pressing Ctrl + W
 # autoload -U select-word-style
@@ -99,7 +100,7 @@ plugins=(
 	zsh-interactive-cd
 	
 	#json
-	jsontools
+	# jsontools
 	
 	# From https://github.com/skywind3000/z.lua
 	z.lua
@@ -208,3 +209,6 @@ zmodload -a colors
 zmodload -a autocomplete
 zmodload -a complist
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
