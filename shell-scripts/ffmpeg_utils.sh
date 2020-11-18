@@ -73,6 +73,19 @@ function tomp3(){
     rm -rf mp3_tmp
 }
 
+function tohevc() {
+    file="$1"
+    codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 $file)
+    make_heading "$file: $codec"
+    if [[ $codec != "hevc" ]] then
+        convto "$file" libx265
+        if [[ $? -eq 0 ]] then
+            mv "libx265/$file" "$file"
+        fi
+    else
+        echo "Already in hevc format. Skipping file..."
+    fi
+}
 
 function clipVideo(){
     if [[ $# -ne 3 ]]; then
