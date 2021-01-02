@@ -15,8 +15,10 @@ fi
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	alias xp="pbpaste"
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-	alias xp="xclip -out -selection clipboard"
-	alias xpi="xp -t image/png"
+	if [[ ! -n "$WSL_DISTRO_NAME" ]]; then
+		alias xp="xclip -out -selection clipboard"
+		alias xpi="xp -t image/png"
+	fi
 fi
 
 # ---------------------------------------------------------------------------- #
@@ -33,7 +35,7 @@ alias slideshow="find . * | mpv -fs --image-display-duration=1 --playlist=-"
 alias youtube-dl-aria="youtube-dl --external-downloader 'aria2c' --external-downloader-args '--file-allocation=none -c -x 16 -s 16'" 
 alias youtube="youtube-dl -c -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mkv"
 alias youmusic="youtube-dl -c -f 'bestaudio[ext=m4a]' -x --audio-format mp3"
-alias pd='aria2c --file-allocation=none -c -x 16 -s 16' 
+alias pd='aria2c --file-allocation=none --async-dns=false -c -x 16 -s 16' 
 
 # ---------------------------------------------------------------------------- #
 #                                    python                                    #
@@ -102,9 +104,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	alias tac='tail -r'
 	alias o='open'
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-	alias subl="subl3"
-	alias o='xdg-open'
-	alias net_sucks='systemctl restart NetworkManager.service'
+	if [[ -n "$WSL_DISTRO_NAME" ]]; then
+		alias subl="sublime_text.exe"
+		alias o="wslview"
+	else 
+		alias subl="subl3"
+		alias o='xdg-open'
+		alias net_sucks='systemctl restart NetworkManager.service'
+	fi
 fi
 
 alias wtf_scroll='tput rmcup'

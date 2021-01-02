@@ -5,7 +5,6 @@ else
     ffmpeg_cmd="ffmpeg"
 fi
 
-
 alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -crf 25'
 
 function convto() {
