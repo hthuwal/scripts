@@ -1,6 +1,6 @@
-if command -v ffmpeg-bar &> /dev/null 
+if command -v ffpb &> /dev/null 
 then 
-    ffmpeg_cmd="ffmpeg-bar"
+    ffmpeg_cmd="ffpb"
 else
     ffmpeg_cmd="ffmpeg"
 fi
@@ -13,7 +13,7 @@ function convto() {
         msg="Two arguments expected $# given\n
             \r\tUsage: convert pathtovideo video_format\n
             \rReencode the video using video_format(libx264, libx265)\n\n"
-        printf "$msg"
+        printf "%s" "$msg"
         return 1
     fi
     
@@ -36,7 +36,7 @@ function scale() {
         msg="Three argument expected $# given\n
             \r\tUsage: scale pattovideo width height\n
             \rScale the video to width x height\n\n"
-        printf "$msg"
+        printf "%s" "$msg"
         return 1
     fi
     
@@ -56,16 +56,14 @@ function tomp3(){
         msg="One argument expected $# given\n
              \r\tUsage: tomp3 ext\n
              \rAll files with .ext extension in current directory will be converted to .mp3\n\n"
-        printf "$msg"
+        printf "%s" "$msg"
         return 1
     fi
 
     mkdir mp3_tmp
-    for i in *.$1
+    for i in *."$1"
     do 
-        ($ffmpeg_cmd -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3") 
-        if [[ $? -eq 0 ]]
-        then
+        if $ffmpeg_cmd -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3"; then
             echo "Conversion successful"
         fi
     done
@@ -75,11 +73,11 @@ function tomp3(){
 
 function tohevc() {
     file="$1"
-    codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 $file)
+    codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$file")
     make_heading "$file: $codec"
-    if [[ $codec != "hevc" ]] then
+    if [[ $codec != "hevc" ]]; then
         convto "$file" libx265
-        if [[ $? -eq 0 ]] then
+        if convto "$file" libx265; then
             mv "libx265/$file" "$file"
         fi
     else
@@ -92,7 +90,7 @@ function clipVideo(){
         msg="Three arguments expected $# given\n
              \r\tUsage: clipVideo pathtovideo start_time end_time\n
              \rVideo is clipped from start_time to end_time\n\n"
-        printf "$msg"
+        printf "%s" "$msg"
         return 1
     fi
 
@@ -107,7 +105,7 @@ function clipVideo(){
     fi
 
     dest_file="$dest_dir""/""$start""to""$end""of""$file_name"
-    dest_file=$(sed "s/:/_/g" <<< $dest_file)
+    dest_file="${dest_file//:/_}"
     echo -e "\nClipping $file_name from $start to $end\n"
     $ffmpeg_cmd -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
 }
@@ -116,7 +114,7 @@ function addsub(){
     if [[ $# -ne 2 ]]; then
         msg="Three arguments expected $# given\n
              \r\tUsage: addsub pathtovideo pathtosrt\n\n"
-        printf "$msg"
+        printf "%s" "$msg"
         return 1
     fi
 
@@ -134,10 +132,8 @@ function addsub(){
     if [[ $ext == "mkv" ]]; then
         srt="srt"
     fi
-    
-    $ffmpeg_cmd -i "$subtitles" -i "$1" -c copy -c:s $srt -disposition:s:0 default "$dest_file"
 
-    if [[ $? == 0 ]]; then
+    if $ffmpeg_cmd -i "$subtitles" -i "$1" -c copy -c:s $srt -disposition:s:0 default "$dest_file"; then
         echo -e "Subtiles added successfullly\n"
         rm "$file_name" "$subtitles"
         mv "$dest_file" "$file_name"
@@ -158,7 +154,7 @@ function addsub2all(){
         if ! [[ -f "$subtitles" ]]; then
             subtitles="$root_dir""/""$name".en.srt
         fi
-        if  [[ -f "$subtitles" ]] && ([[ $ext == "mkv" ]] || [[ $ext == "mp4" ]] || [[ $ext == "m4v" ]]); then
+        if  [[ -f "$subtitles" ]] && { [[ $ext == "mkv" ]] || [[ $ext == "mp4" ]] || [[ $ext == "m4v" ]]; }; then
             addsub "$file" "$subtitles"
         fi
     done

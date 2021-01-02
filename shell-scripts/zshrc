@@ -55,31 +55,7 @@ ENABLE_CORRECTION="true"
 
 # ------------------------------ OH-MY-ZSH THEME ----------------------------- #
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	ZSH_THEME="bira"
-elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-	ZSH_THEME="spaceship"
-	
-	SPACESHIP_PROMPT_ORDER=(
-		user dir host git
-		line_sep    
-		exit_code char
-	)
-	SPACESHIP_RPROMPT_ORDER=(exec_time venv conda pyenv time)
-
-	SPACESHIP_DIR_COLOR=012
-	SPACESHIP_TIME_SHOW=true
-	SPACESHIP_TIME_PREFIX="| "
-	SPACESHIP_TIME_COLOR=245
-	SPACESHIP_TIME_FORMAT="%D{%H:%M:%S}"
-	SPACESHIP_DIR_TRUNC_REPO=false
-	SPACESHIP_GIT_PREFIX="("
-	SPACESHIP_GIT_SYMBOL=""
-	SPACESHIP_GIT_SUFFIX=") "
-	SPACESHIP_GIT_BRANCH_COLOR=white
-	SPACESHIP_GIT_STATUS_SHOW=false
-	SPACESHIP_VENV_COLOR=198
-fi
+eval "$(starship init zsh)"
 
 # ----------------------------- OH-MY-ZSH PLUGINS ---------------------------- #
 
@@ -108,10 +84,6 @@ plugins=(
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
-# TODO: find better way to do this
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	RPROMPT="[%D{%f/%m/%y} | %D{%H:%M:%S}]"
-fi
 
 # ############################################################################ #
 #                              CUSTOM KEYBINDINGS                              #
@@ -153,9 +125,9 @@ zle -N                 cdUndoKey
 
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-	## TODO: WTH are these key combinations
-	# bindkey '^[^[[A'      cdParentKey
-	# bindkey '^[^[[D'      cdUndoKey
+	# TODO: WTH are these key combinations
+	bindkey '^[^[[A'      cdParentKey
+	bindkey '^[^[[D'      cdUndoKey
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 	bindkey '^[[1;3A'      cdParentKey
 	bindkey '^[[1;3D'      cdUndoKey

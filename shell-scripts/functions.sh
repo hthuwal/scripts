@@ -1,6 +1,8 @@
 function gio() { 
-    curl -L -s https://www.gitignore.io/api/$@ ;
+    curl -L -s "https://www.gitignore.io/api/$1" ;
 }
+
+# ------------- Rename media files based on their creation date. ------------- #
 
 function rename_media(){
 	num_params=$#
@@ -11,10 +13,10 @@ function rename_media(){
     	if [[ -d $1 ]]
     	then
 	    	cur=$(pwd)
-			cd "$1"
+			cd "$1" || exit
 	        for filename in *
 	        do
-	          	tmp="$(echo "$filename" | tr '[A-Z]' '[a-z]')"
+	          	tmp="$(echo "$filename" | tr '[:upper:]' '[:lower:]')"
 	          	case "$filename" in
 		          	
 		          	20??_*) date="fine" ;;
@@ -31,18 +33,18 @@ function rename_media(){
 	          	esac
 
 	          	if [[ $date == "fine" ]]; then
-	          		echo "Don't need to rename "$filename;
+	          		echo "Don't need to rename $filename";
 
-	          	elif [[ ! -z $date ]]; then	
-					mv -iv "$filename" "$(exiftool -s $date -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_$tmp
+	          	elif [[ -n $date ]]; then	
+					mv -iv "$filename" "$(exiftool -s "$date" -d "%Y_%m_%d_%H_%M_%S" "$filename" | awk -F ': ' '{print $2}')"_"$tmp"
 	          	
 	          	else
 	          		echo "$filename" is not of a supported format.
 	          	fi
 	        done
-	        cd "$cur"
+	        cd "$cur" || exit
         else
-        	echo $1 is not a directory
+        	echo "$1" is not a directory
         fi
     else
         echo -e "One argmuent required: The path to the directory containing media files"
@@ -50,24 +52,27 @@ function rename_media(){
     fi
 }
 
+# ---------------- Function to compile and execute a cpp file ---------------- #
+
 function cpp() {
-    # Function to compile and execute a cpp file
     num_params=$#
     if [[ $num_params -eq 2 ]]
     then    
         echo "g++ $1 && time ./a.out < $2"
-        g++ $1 && time ./a.out < $2
+        g++ "$1" && time ./a.out < "$2"
         rm a.out
     elif [[ $num_params -eq 1 ]]
     then
         echo "g++ $1 && time ./a.out"
-        g++ $1 && time ./a.out
+        g++ "$1" && time ./a.out
         rm a.out
     else
         echo -e "Atleast one argmuent required"
         echo -e "\nUsage:\n\n\tcpp file.cpp input_file(optional)\n"
     fi
 }
+
+# ---------------------- Check if argument is a number. ---------------------- #
 
 function isNum(){
     re='^[0-9]+$'
@@ -78,6 +83,8 @@ function isNum(){
         echo 0
     fi
 }
+
+# --------------------- Activate the closest virtual env. -------------------- #
 
 function activate()
 {
@@ -92,15 +99,17 @@ function activate()
 			echo "env folder not found."
 			cond=false
 		elif [ -d "env" ]; then
-			echo "Activating virtual environment located at: "$(realpath "env")
+			echo "Activating virtual environment located at: $(pwd)/env"
 			source	"env/bin/activate"
 			cond=false
 		else
 			cd ..
 		fi
 	done
-	cd "$cwd"
+	cd "$cwd" || exit
 }
+
+# -------------------------------- Shrink pdf. ------------------------------- #
 
 function shrink-pdf()
 {
@@ -159,7 +168,7 @@ function shrink-pdf()
 								quality="/printer"
 					            ;;
 					        *)
-								echo -e "Quality shoulb be between [0-3]. Use -h|--help to see the valid options"
+								echo -e "Quality should be between [0-3]. Use -h|--help to see the valid options"
 					            return 1
 					            ;;
 					esac
@@ -200,7 +209,8 @@ function shrink-pdf()
 	return 0
 }
 
-# function to pad a white background around an image
+# ------------ Function to pad a black background around an image. ----------- #
+
 function pad()
 {
 	input=$1
@@ -219,38 +229,38 @@ function pad()
 
 	width=$(convert "$1" -print "%w" /dev/null)
 	height=$(convert "$1" -print "%h" /dev/null)
-	convert -background $color -gravity center -extent $(echo $width + $padding | bc)x$(echo $height + $padding | bc) "$input" "$output"
+	convert -background $color -gravity center -extent "$(echo "$width + $padding" | bc)"x"$(echo "$height + $padding" | bc)" "$input" "$output"
 }
 
-# Find Files based on size
+# ------------------------- Find Files based on size. ------------------------ #
+
 # +1G files bigger than 1Gigs
 # -1G files smaller than 1Gigs
 function ffbs()
 {
 	dir="$1"
 	thresh="$2"
-
-	find "$dir" -type f -size "$2" | xargs -d '\n' du -sh
+	find "$dir" -type f -size "$thresh" -print0 | xargs -0 du -sh
 }
 
-#
-# # ex - archive extractor
+# -------------------------- ex - archive extractor -------------------------- #
+
 # # usage: ex <file>
 function ex ()
 {
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1     ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1     ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
+  if [ -f "$1" ] ; then
+    case "$1" in
+      *.tar.bz2)   tar xjf "$1"   ;;
+      *.tar.gz)    tar xzf "$1"   ;;
+      *.bz2)       bunzip2 "$1"   ;;
+      *.rar)       unrar x "$1"     ;;
+      *.gz)        gunzip "$1"    ;;
+      *.tar)       tar xf "$1"    ;;
+      *.tbz2)      tar xjf "$1"   ;;
+      *.tgz)       tar xzf "$1"   ;;
+      *.zip)       unzip "$1"     ;;
+      *.Z)         uncompress "$1";;
+      *.7z)        7z x "$1"      ;;
       *)           echo "'$1' cannot be extracted via ex()" ;;
     esac
   else
@@ -258,43 +268,44 @@ function ex ()
   fi
 }
 
-# Function takes number of digits as argument
-# Generates a random number with that many digits
+# -------- Generates a random number with specified number of digits. -------- #
+
 function random_num {
 	num_digits=$1
-	NUMBER=$(cat /dev/urandom | LC_CTYPE=C tr -dc '0-9' | fold -w 256 | head -n 1 | sed -e 's/^0*//' | head -c $num_digits)
+	NUMBER=$(LC_CTYPE=C tr -dc '0-9' < "/dev/urandom" | fold -w 256 | head -n 1 | sed -e 's/^0*//' | head -c "$num_digits")
 	if [[ "$NUMBER" == "" ]]; then
 	  NUMBER=0
 	fi
 	echo $NUMBER
 }
 
-# Function takes number of characters as arguments
-# Generates a random alpha-numeric string with that many characters
+# ------- Generates a random alpha-numeric string of specified length. ------- #
+
 function random_string {
 	num_chars=$1
-	echo $(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w $num_chars | head -n 1)
+	LC_CTYPE=C tr -dc 'a-zA-Z0-9' < "/dev/random" | fold -w "$num_chars" | head -n 1
 }
 
-function xsv-head() {
-    lines=${2:-100}
-    xsv cat -n rows -- $1 | head -n $lines | xsv table | less -S
-}
+# ----------- Function to print stuff at the center of the screen. ----------- #
 
-## Function to print stuff at the center of the screen
 function make_heading {
   columns=$(tput cols)
   title=$1
   printf '%*s\n' "${columns}" '' | tr ' ' =
-  printf "%*s\n" $(((${#title}+$columns)/2)) "$title"
+  printf "%*s\n" $(((${#title}+columns)/2)) "$title"
   printf '%*s\n' "${columns}" '' | tr ' ' =
+}
+
+function xsv-head() {
+    lines=${2:-100}
+    xsv cat -n rows -- "$1" | head -n "$lines" | xsv table | less -S
 }
 
 # ------------------------------------ FUN ----------------------------------- #
 function fun {
 	if command -v cowsay &> /dev/null && command -v fortune &> /dev/null; then
-		cowlist=( $(cowsay -l | sed "1 d") );
-		thechosencow=${cowlist[$(($RANDOM % ${#cowlist[*]}))]}
+		cowlist=($(cowsay -l | sed "1 d"))
+		thechosencow=${cowlist[$((RANDOM % ${#cowlist[*]}))]}
 		fortune | cowsay -f "$thechosencow" 
 	fi
 }
