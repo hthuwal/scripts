@@ -31,4 +31,21 @@ alias kl='kubectl logs'
 alias klf='kubectl logs -f'
 
 # ----------------------------------- SCP ------------------------------------ #
-alias kcp='kubectl cp'
+function kcp() {
+        namespace=$1
+        pod=$2
+        source=$3
+        target=$4
+        if [[ ! -d $target ]] ; then
+                echo "$target is not a valid directory."
+                return 1
+        fi
+        size=$(kubectl exec -n $namespace $pod -- du -k -d 0 "$source" | awk -F" " '{print $1}')
+
+        if [[ -z ${size+x} ]] || [[ $size == "" ]] ; then
+                echo "Error while estimating size of the source to be copied.";
+        else
+                echo "Copying $size KB of data from $source"
+                kubectl exec -n $namespace $pod -- tar cf - "$source" | pv -s "$size"k | tar xf - -C "$target"
+        fi
+}
