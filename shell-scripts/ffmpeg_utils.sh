@@ -75,7 +75,6 @@ function tohevc() {
     codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$file")
     make_heading "$file: $codec"
     if [[ $codec != "hevc" ]]; then
-        convto "$file" libx265
         if convto "$file" libx265; then
             mv "libx265/$file" "$file"
         fi
