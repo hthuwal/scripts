@@ -25,6 +25,13 @@ key[ShiftTab]="${terminfo[kcbt]}"
 
 
 local scripts="$HOME/dev/scripts/shell-scripts"
+local work_scripts="$HOME/work/for-work-by-me/work-scripts/bash-scripts/work.sh"
+
+if [[ -f "$work_scripts" ]]; then
+	source "$work_scripts"
+fi
+
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	source "$HOME/work/for-work-by-me/appd-scripts/appd.sh"
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

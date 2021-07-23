@@ -83,10 +83,22 @@ fi
 
 alias dcls='docker container ls -a'
 alias dils='docker image ls -a'
-alias dirm='docker image rm $(docker image ls -q)'
-alias dcrm='docker container rm $(docker container ls -a -q)'
+alias dirm='docker image rm '
+alias dcrm='docker container rm'
+alias dirma='docker image rm $(docker image ls -q)'
+alias dcrma='docker container rm $(docker container ls -a -q)'
 alias dkillall='docker kill $(docker ps -a -q)'	
 alias vpl_docker='docker run --rm --privileged -p 80:80 -p 443:443 -it --user root hthuwal/vpl_docker bash -c "service vpl-jail-system start; bash"'
+alias dprune='docker system prune --volumes  -f'
+
+# ---------------------------------------------------------------------------- #
+#                                Docker Compose                                #
+# ---------------------------------------------------------------------------- #
+
+alias dku='docker-compose up -d'
+alias dkd='docker-compose down'
+alias dks='docker-compose stop'
+alias dkl='docker-compose logs -f'
 
 # ---------------------------------------------------------------------------- #
 #                                 Miscellaneous                                #
