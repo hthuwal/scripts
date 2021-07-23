@@ -33,7 +33,6 @@ fi
 
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-	source "$HOME/work/for-work-by-me/appd-scripts/appd.sh"
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 elif [[ -n "$WSL_DISTRO_NAME" ]]; then
 	export PATH="/home/linuxbrew/.linuxbrew/opt/openjdk@11/bin:$PATH"
@@ -45,8 +44,9 @@ source "$scripts/functions.sh"
 source "$scripts/ffmpeg_utils.sh"
 source "$scripts/kube.sh"
 
-export PATH=/usr/local/sbin:$HOME/bin:$HOME/.local/bin:$PATH
-export GOPATH=$HOME/bin/go
+export GOPATH=$HOME/go
+export PATH="/usr/local/opt/go@1.13/bin:$PATH"
+export PATH=/usr/local/sbin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$PATH
 
 # Kill entire arguments on pressing Ctrl + W
 # autoload -U select-word-style
@@ -139,7 +139,7 @@ zle -N                 cdUndoKey
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	# TODO: WTH are these key combinations
 	bindkey '^[^[[A'      cdParentKey
-	bindkey '^[^[[D'      cdUndoKey
+	bindkey '^[^[[B'      cdUndoKey
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 	bindkey '^[[1;3A'      cdParentKey
 	bindkey '^[[1;3D'      cdUndoKey
