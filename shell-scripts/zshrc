@@ -105,8 +105,8 @@ source $ZSH/oh-my-zsh.sh
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	# Option + Up and Option + Down on mac
-	bindkey '^[[1;9A' history-substring-search-up
-	bindkey '^[[1;9B' history-substring-search-down
+	bindkey '^[[1;5A' history-substring-search-up
+	bindkey '^[[1;5B' history-substring-search-down
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 	# Ctrl + Up and Ctrl + Down on non-mac
 	bindkey '^[[1;5A' history-substring-search-up
