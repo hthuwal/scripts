@@ -99,6 +99,7 @@ alias dku='docker-compose up -d'
 alias dkd='docker-compose down'
 alias dks='docker-compose stop'
 alias dkl='docker-compose logs -f'
+alias dkb='docker-compose build'
 
 # ---------------------------------------------------------------------------- #
 #                                 Miscellaneous                                #

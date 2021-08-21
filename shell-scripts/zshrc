@@ -164,6 +164,9 @@ setopt HIST_FIND_NO_DUPS
 #                                     HACKS                                    #
 # ############################################################################ #
 
+setopt promptsubst
+PS1=$'${(r:$COLUMNS::\u2500:)}'$PS1
+
 # ---------------------- MAKE PAINFULLY SLOW PASTE FAST ---------------------- #
 
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238#issuecomment-389324292
