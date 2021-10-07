@@ -317,3 +317,15 @@ function dksul {
 	docker-compose up -d $1
 	docker-compose logs -f $1
 }
+
+# -------------------------------- Darken Pdf -------------------------------- #
+function darkenPdf {
+	echo "Converting into jpg..."
+	convert -density 500 "$1" temp.jpg
+	echo "Increasing contrast..."
+	convert	temp*.jpg -level 50%%,100%%,0.3 darker.jpg
+	rm temp*.jpg
+	echo "Combining Into Pdf..."
+	convert darker*.jpg "darker-${1}.pdf"
+	rm darker*.jpg
+}
