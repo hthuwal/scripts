@@ -9,9 +9,10 @@ alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -c
 
 function convto() {
     if [[ $# -ne 2 ]]; then
-        msg="Two arguments expected $# given\n
-            \r\tUsage: convert pathtovideo video_format\n
-            \rReencode the video using video_format(libx264, libx265)\n\n"
+        msg="Two arguments expected. $# given.
+             Usage: convert pathtovideo video_format
+             
+             Reencode the video using video_format(libx264, libx265)"
         printf "%s" "$msg"
         return 1
     fi
@@ -20,14 +21,18 @@ function convto() {
     root_dir=$(dirname "$1")
     format=$2
     dest_dir="$root_dir""/""$format"
-    
+
     if [[ ! -d "$dest_dir" ]]; then
         mkdir "$dest_dir"
     fi
 
     dest_file="$dest_dir""/""$file_name"
     echo "Trying to convert to $format.."
-    $ffmpeg_cmd -i "$1" -map 0 -c:a copy -c:s copy -c:v "$format" "$dest_file"   
+    if [[ $format == "libx265" ]]; then 
+        $ffmpeg_cmd -i "$1" -pix_fmt yuv420p10le -map 0 -c:a copy -c:s copy -c:v "$format" -x265-params profile=main10 "$dest_file"
+    else
+        $ffmpeg_cmd -i "$1" -map 0 -c:a copy -c:s copy -c:v "$format" "$dest_file"
+    fi   
 }
 
 function scale() {
