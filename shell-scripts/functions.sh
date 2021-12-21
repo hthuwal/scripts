@@ -329,3 +329,8 @@ function darkenPdf {
 	convert darker*.jpg "darker-${1}.pdf"
 	rm darker*.jpg
 }
+
+# ------------------------------- Dollor to INR ------------------------------ #
+function dinr() {
+  curl "https://www.fbil.org.in/wasdm/refrates/fetchfiltered?fromDate=$1&toDate=$1&authenticated=false" |  jq ".[] | .processRunDate, .subProdName, .rate" | paste - - -
+}
