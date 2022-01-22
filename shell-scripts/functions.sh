@@ -117,7 +117,6 @@ function shrink-pdf()
 	function usage(){
 		echo -e "Usage: shrink-pdf <-i|--input INPUT_PDF_FILE> <OPTIONS>\n"
 		echo -e "Shrink the INPUT_PDF_FILE\n\n"
-
 		echo -e "OPTIONS\n"
 		printf "%-25s\t%s\n" "-o|--output" "Specify name of the output file. Default name of the output file is INPUT_PDF_FILE-shrink.pdf"
 		printf "%-25s\t%s\n" "-q|--quality" "Specify output quality [0-3]. Default is 1"
@@ -128,7 +127,7 @@ function shrink-pdf()
 	}
 
 	# dealing with command line args
-	while [ "$#" -gt 0 ]
+	while [[ "$#" -gt 0 ]]
 	do
 		case "$1" in
 
@@ -139,7 +138,7 @@ function shrink-pdf()
 
 			-i|--input)
 				local infile="$2"
-				if ! [ -f "$infile" ]; then
+				if ! [[ -f "$infile" ]]; then
 					echo -e "file '$infile' does not exist\n"
 					usage
 					return 1
@@ -186,20 +185,20 @@ function shrink-pdf()
 	done
 
 	# checking if variables are set or not
-	if [ -z "$infile" ]; then
+	if [[ -z "$infile" ]]; then
 		echo -e "Error: No input file specified. Use -h|--help to see the valid options"
 		return 1
 	fi
 
-	if [ -z "$outfile" ]; then
-		if [ "${infile: -4:4}" == ".pdf" ]; then ## filename has extension .pdf
+	if [[ -z "$outfile" ]]; then
+		if [[ "${infile: -4:4}" == ".pdf" ]]; then ## filename has extension .pdf
 			outfile=${infile:0: -4}"-shrink.pdf"
 		else
 			outfile=$infile"-shrink.pdf"
 		fi
 	fi
 
-	if [ -z "$quality" ]; then	
+	if [[ -z "$quality" ]]; then	
 		quality="/ebook"
 	fi
 

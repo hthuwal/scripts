@@ -63,11 +63,11 @@ zle -N self-insert url-quote-magic
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="false"
 
 # ------------------------------ OH-MY-ZSH THEME ----------------------------- #
 
-eval "$(starship init zsh)"
+ZSH_THEME="candy"
 
 # ----------------------------- OH-MY-ZSH PLUGINS ---------------------------- #
 
