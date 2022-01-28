@@ -51,7 +51,6 @@ alias ptpy='ptpython'
 # -------------------------------- What I use -------------------------------- #
 
 alias gst="git status"
-alias gs="git stash --include-untracked"
 alias gsp="git stash pop"
 alias gtm='git stash --include-untracked && git checkout master'
 alias gb='git checkout - && git stash pop'

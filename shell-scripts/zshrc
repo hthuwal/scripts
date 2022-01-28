@@ -34,6 +34,7 @@ fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+	export PATH="$PATH:/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin"
 elif [[ -n "$WSL_DISTRO_NAME" ]]; then
 	export PATH="/home/linuxbrew/.linuxbrew/opt/openjdk@11/bin:$PATH"
 	export JAVA_HOME="/home/linuxbrew/.linuxbrew/opt/openjdk@11"
@@ -67,7 +68,7 @@ ENABLE_CORRECTION="false"
 
 # ------------------------------ OH-MY-ZSH THEME ----------------------------- #
 
-ZSH_THEME="candy"
+ZSH_THEME='candy'
 
 # ----------------------------- OH-MY-ZSH PLUGINS ---------------------------- #
 
@@ -164,9 +165,6 @@ setopt HIST_FIND_NO_DUPS
 #                                     HACKS                                    #
 # ############################################################################ #
 
-setopt promptsubst
-PS1=$'${(r:$COLUMNS::\u2500:)}'$PS1
-
 # ---------------------- MAKE PAINFULLY SLOW PASTE FAST ---------------------- #
 
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238#issuecomment-389324292
@@ -197,3 +195,9 @@ zmodload -a colors
 zmodload -a autocomplete
 zmodload -a complist
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+
+fucntion fzf() {
+	unfunction fzf
+	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+	fzf "$@"
+}

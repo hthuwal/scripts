@@ -312,8 +312,8 @@ function fun {
 
 # ---------------------------- docker stop up logs --------------------------- #
 function dksul {
-	docker-compose stop $1
-	docker-compose up -d $1
+	docker-compose stop $1 &&\
+	docker-compose up -d $1 &&\
 	docker-compose logs -f $1
 }
 
