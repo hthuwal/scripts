@@ -1,3 +1,5 @@
+# zmodload zsh/zprof
+
 # ############################################################################ #
 #                                     KEYS                                     #
 # ############################################################################ #
@@ -40,6 +42,7 @@ elif [[ -n "$WSL_DISTRO_NAME" ]]; then
 	export JAVA_HOME="/home/linuxbrew/.linuxbrew/opt/openjdk@11"
 	export JDK_HOME="/home/linuxbrew/.linuxbrew/opt/openjdk@11"
 fi
+
 source "$scripts/aliases.sh"
 source "$scripts/functions.sh"
 source "$scripts/ffmpeg_utils.sh"
@@ -191,13 +194,14 @@ export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;
 
 # Use same colors for zsh autocompletion
 # https://github.com/twam/.dotfiles/blob/master/ls_colors/ls_colors.zsh#L19-L23
+
 zmodload -a colors
 zmodload -a autocomplete
 zmodload -a complist
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
-fucntion fzf() {
-	unfunction fzf
-	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-	fzf "$@"
-}
+# zmodload -a colors
+# zmodload -a autocomplete
+# zmodload -a complist
+# zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+

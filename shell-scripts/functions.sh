@@ -333,3 +333,10 @@ function darkenPdf {
 function dinr() {
   curl "https://www.fbil.org.in/wasdm/refrates/fetchfiltered?fromDate=$1&toDate=$1&authenticated=false" |  jq ".[] | .processRunDate, .subProdName, .rate" | paste - - -
 }
+
+# ------------------------------- Lazy Load fzf ------------------------------ #
+fucntion fzf() {
+	unfunction fzf
+	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+	fzf "$@"
+}
