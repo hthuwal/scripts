@@ -1,5 +1,4 @@
-if command -v ffpb &> /dev/null 
-then 
+if command -v ffpb &>/dev/null; then
     ffmpeg_cmd="ffpb"
 else
     ffmpeg_cmd="ffmpeg"
@@ -16,7 +15,7 @@ function convto() {
         printf "%s" "$msg"
         return 1
     fi
-    
+
     file_name=$(basename "$1")
     root_dir=$(dirname "$1")
     format=$2
@@ -28,11 +27,11 @@ function convto() {
 
     dest_file="$dest_dir""/""$file_name"
     echo "Trying to convert to $format.."
-    if [[ $format == "libx265" ]]; then 
+    if [[ $format == "libx265" ]]; then
         $ffmpeg_cmd -i "$1" -pix_fmt yuv420p10le -map 0 -c:a copy -c:s copy -c:v "$format" -x265-params profile=main10 "$dest_file"
     else
         $ffmpeg_cmd -i "$1" -map 0 -c:a copy -c:s copy -c:v "$format" "$dest_file"
-    fi   
+    fi
 }
 
 function scale() {
@@ -43,7 +42,7 @@ function scale() {
         printf "%s" "$msg"
         return 1
     fi
-    
+
     file_name=$(basename "$1")
     root_dir=$(dirname "$1")
     width="$2"
@@ -52,10 +51,10 @@ function scale() {
     dest_file=$root_dir/"$width"x"$height"_"$file_name"
 
     echo -e "Scaling...\n"
-    $ffmpeg_cmd -i "$1" -vf scale="$width"x"$height" "$dest_file"  
+    $ffmpeg_cmd -i "$1" -vf scale="$width"x"$height" "$dest_file"
 }
 
-function tomp3(){
+function tomp3() {
     if [[ $# -ne 1 ]]; then
         msg="One argument expected $# given\n
              \r\tUsage: tomp3 ext\n
@@ -65,9 +64,8 @@ function tomp3(){
     fi
 
     mkdir mp3_tmp
-    for i in *."$1"
-    do 
-        if $ffmpeg_cmd -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1}").mp3"; then
+    for i in *."$1"; do
+        if $ffmpeg_cmd -i "$i" -acodec libmp3lame "./mp3_tmp/$(basename "${i/.$1/}").mp3"; then
             echo "Conversion successful"
         fi
     done
@@ -88,7 +86,7 @@ function tohevc() {
     fi
 }
 
-function clipVideo(){
+function clipVideo() {
     if [[ $# -ne 3 ]]; then
         msg="Three arguments expected $# given\n
              \r\tUsage: clipVideo pathtovideo start_time end_time\n
@@ -113,7 +111,7 @@ function clipVideo(){
     $ffmpeg_cmd -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
 }
 
-function addsub(){
+function addsub() {
     if [[ $# -ne 2 ]]; then
         msg="Three arguments expected $# given\n
              \r\tUsage: addsub pathtovideo pathtosrt\n\n"
@@ -146,9 +144,8 @@ function addsub(){
     fi
 }
 
-function addsub2all(){    
-    for file in *
-    do
+function addsub2all() {
+    for file in *; do
         file_name=$(basename "$file")
         name="${file_name%.*}"
         ext="${file_name##*.}"
@@ -157,7 +154,7 @@ function addsub2all(){
         if ! [[ -f "$subtitles" ]]; then
             subtitles="$root_dir""/""$name".en.srt
         fi
-        if  [[ -f "$subtitles" ]] && { [[ $ext == "mkv" ]] || [[ $ext == "mp4" ]] || [[ $ext == "m4v" ]]; }; then
+        if [[ -f "$subtitles" ]] && { [[ $ext == "mkv" ]] || [[ $ext == "mp4" ]] || [[ $ext == "m4v" ]]; }; then
             addsub "$file" "$subtitles"
         fi
     done

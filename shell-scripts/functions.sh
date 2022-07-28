@@ -2,18 +2,6 @@ function gio() {
     curl -L -s "https://www.gitignore.io/api/$1" ;
 }
 
-# --------------------- List all branches older than date -------------------- #
-
-function list_old_branches() {
-	padding="                                      "
-	for branch in $(git branch -r | grep -v HEAD | grep -v develop | grep -v master | grep -v main | grep -v "release*" | sed /\*/d); do
-		if [[ -z "$(git log -1 --since=\"${1}\" -s ${branch})" ]]; then
-			last_updated=$(git show --format="%ci %cr %an" ${branch} | head -n 1)
-			printf "%s%s %s\n" "${branch}" "${padding:${#branch}}" "${last_updated}"
-		fi
-	done
-}
-
 # ------------- Rename media files based on their creation date. ------------- #
 
 function rename_media(){

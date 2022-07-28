@@ -1,11 +1,11 @@
 echo Compressing with webp...
 
-if ! command -v cwebp &> /dev/null; then 
+if ! command -v cwebp &>/dev/null; then
     echo "cwebp not found. Please install cwebp and rerun the script"
     exit 1
 fi
 
-rm -rf ./epub 
+rm -rf ./epub
 unzip "$1" -d epub
 
 cd epub

@@ -47,6 +47,7 @@ source "$scripts/aliases.sh"
 source "$scripts/functions.sh"
 source "$scripts/ffmpeg_utils.sh"
 source "$scripts/kube.sh"
+source "$scripts/git_functions.sh"
 
 export GOPATH=$HOME/go
 export PATH="/usr/local/opt/go@1.13/bin:$PATH"
