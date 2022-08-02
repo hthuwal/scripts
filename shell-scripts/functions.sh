@@ -319,14 +319,14 @@ function dksul {
 
 # -------------------------------- Darken Pdf -------------------------------- #
 function darkenPdf {
-	echo "Converting into jpg..."
-	convert -density 500 "$1" temp.jpg
+	echo "Converting into png..."
+	convert -density 384 "${1}" -quality 100 -alpha remove temp.png
 	echo "Increasing contrast..."
-	convert	temp*.jpg -level 50%%,100%%,0.3 darker.jpg
-	rm temp*.jpg
+	convert temp*.png -level 50%%,100%%,0.3 darker.png
+	rm temp*.png
 	echo "Combining Into Pdf..."
-	convert darker*.jpg "darker-${1}.pdf"
-	rm darker*.jpg
+	convert darker*.png "darker-${1}.pdf"
+	rm darker*.png
 }
 
 # ------------------------------- Dollor to INR ------------------------------ #
