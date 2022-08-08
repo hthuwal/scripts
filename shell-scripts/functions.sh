@@ -335,7 +335,7 @@ function dinr() {
 }
 
 # ------------------------------- Lazy Load fzf ------------------------------ #
-fucntion fzf() {
+function fzf() {
 	unfunction fzf
 	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 	fzf "$@"
