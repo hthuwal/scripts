@@ -12,14 +12,14 @@ function delete_gone_branches() {
         return 1
     fi
 
-    cd ${dir}
+    pushd ${dir}
     if [[ -d .git ]]; then
         git fetch -p
         git branch -v | grep gone | awk -F' ' '{print $1}' | xargs -I{} -P 4 -- git branch -D {}
     else
         echo "Not a git repository."
     fi
-    cd ..
+    popd
 }
 
 # --------------------- List all branches older than date -------------------- #
