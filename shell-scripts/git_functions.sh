@@ -28,14 +28,19 @@ function delete_gone_branches() {
     fi
 }
 
-# --------------------- List all branches older than date -------------------- #
+# ------------------------------- Old branches ------------------------------- #
 
-function list_old_branches() {
+# Default behaviour is to list, if $2 == delete, it delete them too
+function old_branches() {
     padding="                                      "
     for branch in $(git branch -r | grep -v HEAD | grep -v develop | grep -v master | grep -v main | grep -v "release*" | sed /\*/d); do
         if [[ -z "$(git log -1 --since=\"${1}\" -s ${branch})" ]]; then
             last_updated=$(git show --format="%ci %cr %an" ${branch} | head -n 1)
+            remote_branch=$(echo ${branch} | sed 's#origin/##')
             printf "%s%s %s\n" "${branch}" "${padding:${#branch}}" "${last_updated}"
+            if [[ $2 == 'delete' ]]; then 
+                git push origin --delete $remote_branch
+            fi
         fi
     done
 }
