@@ -28,19 +28,40 @@ function delete_gone_branches() {
     fi
 }
 
-# ------------------------------- Old branches ------------------------------- #
+# ---------------------- Remove Old Branches From Remote --------------------- #
+function removeBranchesFromRemote() {
+    padding="                "
+    date=$(gum input --value $(date '+%Y-%m-%d') --placeholder "Older than?")
+    if [[ -z "$date" ]]; then
+        echo "Date cannot be empty"
+        return
+    fi
 
-# Default behaviour is to list, if $2 == delete, it delete them too
-function old_branches() {
-    padding="                                      "
-    for branch in $(git branch -r | grep -v HEAD | grep -v develop | grep -v master | grep -v main | grep -v "release*" | sed /\*/d); do
-        if [[ -z "$(git log -1 --since=\"${1}\" -s ${branch})" ]]; then
-            last_updated=$(git show --format="%ci %cr %an" ${branch} | head -n 1)
-            remote_branch=$(echo ${branch} | sed 's#origin/##')
-            printf "%s%s %s\n" "${branch}" "${padding:${#branch}}" "${last_updated}"
-            if [[ $2 == 'delete' ]]; then 
-                git push origin --delete $remote_branch
+    old_branches=""
+    function populateOldBranches() {
+        for remote_branch in $(git branch -r | grep -v "HEAD\|develop\|master\|main\|release*" | sed /\*/d); do
+            if [[ -z "$(git log -1 --since=\"${date}\" -s ${remote_branch})" ]]; then
+                author=$(git show --format="%an" ${remote_branch} | head -n 1)
+                age=$(git show --format="%cr" ${remote_branch} | head -n 1)
+                branch=$(echo ${remote_branch} | sed 's#origin/##')
+                old_branches+='\n'$(printf "%s|%s|%s\n" \
+                    "${author}${padding:${#author}}" \
+                    "${age}${padding:${#age}}" \
+                    "${branch}")
             fi
+        done
+    }
+
+    populateOldBranches
+
+    if [[ -n $old_branches ]]; then
+        branchesToBeDeleted=$(echo $old_branches | gum choose --no-limit | awk -F'|' '{print $3}')
+        if [[ -n $branchesToBeDeleted ]]; then
+            echo $branchesToBeDeleted
+            gum confirm "Delete aforementioned branches from remote?" &&
+                echo $branchesToBeDeleted | xargs -P 8 -I{} -- git push origin --delete {}
         fi
-    done
+    else
+        echo "No branch older than ${date} found."
+    fi
 }
