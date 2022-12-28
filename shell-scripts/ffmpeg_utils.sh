@@ -159,3 +159,24 @@ function addsub2all() {
         fi
     done
 }
+
+
+function videoProcessing() {
+    action=$(gum choose "Re-encode")
+
+    if [[ $action == "Re-encode" ]]; then
+        file=$(gum file $(pwd))
+        format=$(gum choose "libx264" "libx265")
+
+        codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$file")
+        if [[ $codec == "h264" && $format == "libx264" ]] || [[ $codec == "hevc" && $format == "libx265" ]]; then
+            gum style \
+	            --foreground 212 --border-foreground 212 --border double \
+	            --align center --margin "1 2" --padding "2 4" \
+                "$file already has $format encoding."
+            return 0
+        fi
+
+        gum confirm "Re-encode ${file} to ${format}" && convto "${file}" "${format}"
+    fi
+}
