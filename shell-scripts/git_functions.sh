@@ -24,7 +24,7 @@ function delete_gone_branches() {
     fi
 
     if [[ ${dir} != '.' ]]; then
-    popd
+        popd
     fi
 }
 
