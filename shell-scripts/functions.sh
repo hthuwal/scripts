@@ -204,7 +204,7 @@ function xsv-head() {
 }
 
 # ------------------------------------ FUN ----------------------------------- #
-function fun {
+function fun() {
 	if command -v cowsay &> /dev/null && command -v fortune &> /dev/null; then
 		cowlist=($(cowsay -l | sed "1 d"))
 		thechosencow=${cowlist[$((RANDOM % ${#cowlist[*]}))]}
@@ -231,4 +231,81 @@ function fzf() {
 	unfunction fzf
 	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 	fzf "$@"
+}
+
+# ----------------- Interactive grpcurl and grpcui using gum ----------------- #
+
+function fgrpcui() {
+	if [[ ! -d $1 ]]; then
+		echo "Path to proto folder is req"
+		return
+	fi
+
+	protopath=${1}
+	proto=$(find $protopath -type f | gum filter --placeholder="Select proto file")
+	if [[ -z $proto ]] {
+		echo "No Proto file selected. Exiting"
+		return
+	}
+
+	url=$(gum input --placeholder "gRPC server URL")
+	if [[ -z $url ]] {
+		echo "Empty Url. Exiting"
+		return
+	}
+
+	grpcui --plaintext --import-path ${protopath} -proto ${proto} ${url}
+}
+
+function fgrpcurl() {
+	if [[ ! -d $1 ]]; then
+		echo "Path to proto folder is req"
+		return
+	fi
+	protopath=${1}
+
+	proto=$(find $protopath -type f | gum filter --placeholder="Select proto file")
+	if [[ -z $proto ]] {
+		echo "No Proto file selected. Exiting"
+		return
+	}
+
+	service=$(grpcurl -import-path ${protopath} -proto ${proto} list | gum filter --placeholder="Select Service")
+	if [[ -z $service ]] {
+		echo "No service selected. Exiting"
+		return
+	}
+
+	method=$(grpcurl -import-path ${protopath} -proto ${proto} list ${service} | gum filter --placeholder="Select Service")
+	if [[ -z $method ]] {
+		echo "No method selected. Exiting"
+		return
+	}
+
+	url=$(gum input --placeholder "gRPC server URL")
+	if [[ -z $url ]] {
+		echo "Empty Url. Exiting"
+		return
+	}
+
+	payload=$(gum write --placeholder "Json Payload (CTRL+D to finish)")
+	if [[ -z $payload ]] {
+		echo "Empty payload. Exiting"
+		return
+	}
+
+	cmd="grpcurl -import-path ${protopath} \\
+-proto ${proto} \\
+--plaintext \\
+-d @ \\
+${url} \\
+${method} <<EOM
+${payload}
+EOM"
+
+	make_heading "Executing the following command"
+	echo "\n${cmd}\n"
+	make_heading ""
+	echo
+	eval $cmd
 }

@@ -31,6 +31,7 @@ local work_scripts="$HOME/work/for-work-by-me/work-scripts/bash-scripts/work.sh"
 
 if [[ -f "$work_scripts" ]]; then
 	source "$work_scripts"
+	unset work_scripts
 fi
 
 
