@@ -5,18 +5,18 @@ function gio() {
 # ------------- Rename media files based on their creation date. ------------- #
 
 function rename_media(){
-	num_params=$#
+	local num_params=$#
 	
 	if [[ $num_params -eq 1 ]]
     then
 
     	if [[ -d $1 ]]
     	then
-	    	cur=$(pwd)
+	    	local cur=$(pwd)
 			cd "$1" || exit
 	        for filename in *
 	        do
-	          	tmp="$(echo "$filename" | tr '[:upper:]' '[:lower:]')"
+	          	local tmp="$(echo "$filename" | tr '[:upper:]' '[:lower:]')"
 	          	case "$filename" in
 		          	
 		          	20??_*) date="fine" ;;
@@ -55,7 +55,7 @@ function rename_media(){
 # ---------------- Function to compile and execute a cpp file ---------------- #
 
 function cpp() {
-    num_params=$#
+    local num_params=$#
     if [[ $num_params -eq 2 ]]
     then    
         echo "g++ $1 && time ./a.out < $2"
@@ -75,7 +75,7 @@ function cpp() {
 # ---------------------- Check if argument is a number. ---------------------- #
 
 function isNum(){
-    re='^[0-9]+$'
+    local re='^[0-9]+$'
     if [[ $1 =~ $re ]]
     then
         echo 1
@@ -88,20 +88,20 @@ function isNum(){
 
 function activate()
 {
-	cwd=$(pwd)
-	home=$HOME
+	local cwd=$(pwd)
+	local home=$HOME
 
-	cond=true
+	local cond=true
 	while "$cond"
 	do
-		dir=$(pwd)
+		local dir=$(pwd)
 		if [[ "$dir" == "$home" ]]; then
 			echo "env folder not found."
-			cond=false
+			local cond=false
 		elif [ -d "env" ]; then
 			echo "Activating virtual environment located at: $(pwd)/env"
 			source	"env/bin/activate"
-			cond=false
+			local cond=false
 		else
 			cd ..
 		fi
@@ -115,10 +115,10 @@ function activate()
 
 function pad()
 {
-	input=$1
-	output=$2
-	padding=$3
-	color=$4
+	local input=$1
+	local output=$2
+	local padding=$3
+	local color=$4
 
 	if [ -z "$input" ] || [ -z "$output" ] || [ -z "$padding" ]; then
 		echo -e "Usage:\t pad in_file out_file padding_size.\n\n\t E.g pad in.png out.png 200\n"
@@ -126,11 +126,11 @@ function pad()
 	fi
 
 	if [ -z "$color" ]; then
-		color="black"
+		local color="black"
 	fi
 
-	width=$(convert "$1" -print "%w" /dev/null)
-	height=$(convert "$1" -print "%h" /dev/null)
+	local width=$(convert "$1" -print "%w" /dev/null)
+	local height=$(convert "$1" -print "%h" /dev/null)
 	convert -background $color -gravity center -extent "$(echo "$width + $padding" | bc)"x"$(echo "$height + $padding" | bc)" "$input" "$output"
 }
 
@@ -140,8 +140,8 @@ function pad()
 # -1G files smaller than 1Gigs
 function ffbs()
 {
-	dir="$1"
-	thresh="$2"
+	local dir="$1"
+	local thresh="$2"
 	find "$dir" -type f -size "$thresh" -print0 | xargs -0 du -sh
 }
 
@@ -173,10 +173,10 @@ function ex ()
 # -------- Generates a random number with specified number of digits. -------- #
 
 function random_num {
-	num_digits=$1
-	NUMBER=$(LC_CTYPE=C tr -dc '0-9' < "/dev/urandom" | fold -w 256 | head -n 1 | sed -e 's/^0*//' | head -c "$num_digits")
+	local num_digits=$1
+	local NUMBER=$(LC_CTYPE=C tr -dc '0-9' < "/dev/urandom" | fold -w 256 | head -n 1 | sed -e 's/^0*//' | head -c "$num_digits")
 	if [[ "$NUMBER" == "" ]]; then
-	  NUMBER=0
+	  local NUMBER=0
 	fi
 	echo $NUMBER
 }
@@ -184,34 +184,24 @@ function random_num {
 # ------- Generates a random alpha-numeric string of specified length. ------- #
 
 function random_string {
-	num_chars=$1
-	LC_CTYPE=C tr -dc 'a-zA-Z0-9' < "/dev/random" | fold -w "$num_chars" | head -n 1
+	local num_chars=$1
+	local LC_CTYPE=C tr -dc 'a-zA-Z0-9' < "/dev/random" | fold -w "$num_chars" | head -n 1
 }
 
 # ----------- Function to print stuff at the center of the screen. ----------- #
 
 function make_heading {
-  columns=$(tput cols)
-  title=$1
+  local columns=$(tput cols)
+  local title=$1
   printf '%*s\n' "${columns}" '' | tr ' ' =
   printf "%*s\n" $(((${#title}+columns)/2)) "$title"
   printf '%*s\n' "${columns}" '' | tr ' ' =
 }
 
 function xsv-head() {
-    lines=${2:-100}
+    local lines=${2:-100}
     xsv cat -n rows -- "$1" | head -n "$lines" | xsv table | less -S
 }
-
-# ------------------------------------ FUN ----------------------------------- #
-function fun() {
-	if command -v cowsay &> /dev/null && command -v fortune &> /dev/null; then
-		cowlist=($(cowsay -l | sed "1 d"))
-		thechosencow=${cowlist[$((RANDOM % ${#cowlist[*]}))]}
-		fortune | cowsay -f "$thechosencow" 
-	fi
-}
-
 
 # ---------------------------- docker stop up logs --------------------------- #
 function dksul {
@@ -241,14 +231,14 @@ function fgrpcui() {
 		return
 	fi
 
-	protopath=${1}
-	proto=$(find $protopath -type f | gum filter --placeholder="Select proto file")
+	local protopath=${1}
+	local proto=$(find $protopath -type f | gum filter --placeholder="Select proto file")
 	if [[ -z $proto ]] {
 		echo "No Proto file selected. Exiting"
 		return
 	}
 
-	url=$(gum input --placeholder "gRPC server URL")
+	local url=$(gum input --placeholder "gRPC server URL")
 	if [[ -z $url ]] {
 		echo "Empty Url. Exiting"
 		return
@@ -262,39 +252,39 @@ function fgrpcurl() {
 		echo "Path to proto folder is req"
 		return
 	fi
-	protopath=${1}
+	local protopath=${1}
 
-	proto=$(find $protopath -type f | gum filter --placeholder="Select proto file")
+	local proto=$(find $protopath -type f | gum filter --placeholder="Select proto file")
 	if [[ -z $proto ]] {
 		echo "No Proto file selected. Exiting"
 		return
 	}
 
-	service=$(grpcurl -import-path ${protopath} -proto ${proto} list | gum filter --placeholder="Select Service")
+	local service=$(grpcurl -import-path ${protopath} -proto ${proto} list | gum filter --placeholder="Select Service")
 	if [[ -z $service ]] {
 		echo "No service selected. Exiting"
 		return
 	}
 
-	method=$(grpcurl -import-path ${protopath} -proto ${proto} list ${service} | gum filter --placeholder="Select Service")
+	local method=$(grpcurl -import-path ${protopath} -proto ${proto} list ${service} | gum filter --placeholder="Select Service")
 	if [[ -z $method ]] {
 		echo "No method selected. Exiting"
 		return
 	}
 
-	url=$(gum input --placeholder "gRPC server URL")
+	local url=$(gum input --placeholder "gRPC server URL")
 	if [[ -z $url ]] {
 		echo "Empty Url. Exiting"
 		return
 	}
 
-	payload=$(gum write --placeholder "Json Payload (CTRL+D to finish)")
+	local payload=$(gum write --placeholder "Json Payload (CTRL+D to finish)")
 	if [[ -z $payload ]] {
 		echo "Empty payload. Exiting"
 		return
 	}
 
-	cmd="grpcurl -import-path ${protopath} \\
+	local cmd="grpcurl -import-path ${protopath} \\
 -proto ${proto} \\
 --plaintext \\
 -d @ \\

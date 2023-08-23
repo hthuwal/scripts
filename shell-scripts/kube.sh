@@ -32,15 +32,15 @@ alias klf='kubectl logs -f'
 
 # ----------------------------------- SCP ------------------------------------ #
 function kcp() {
-        namespace=$1
-        pod=$2
-        source=$3
-        target=$4
+        local namespace=$1
+        local pod=$2
+        local source=$3
+        local target=$4
         if [[ ! -d $target ]]; then
                 echo "$target is not a valid directory."
                 return 1
         fi
-        size=$(kubectl exec -n $namespace $pod -- du -k -d 0 "$source" | awk -F" " '{print $1}')
+        local size=$(kubectl exec -n $namespace $pod -- du -k -d 0 "$source" | awk -F" " '{print $1}')
 
         if [[ -z ${size+x} ]] || [[ $size == "" ]]; then
                 echo "Error while estimating size of the source to be copied."

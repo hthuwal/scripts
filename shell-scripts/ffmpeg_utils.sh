@@ -8,7 +8,7 @@ alias img2vid='ffmpeg -r 1 -f image2 -s 1920x1080 -i %03d.png -vcodec libx264 -c
 
 function convto() {
     if [[ $# -ne 2 ]]; then
-        msg="Two arguments expected. $# given.
+        local msg="Two arguments expected. $# given.
              Usage: convert pathtovideo video_format
              
              Reencode the video using video_format(libx264, libx265)"
@@ -16,16 +16,16 @@ function convto() {
         return 1
     fi
 
-    file_name=$(basename "$1")
-    root_dir=$(dirname "$1")
-    format=$2
-    dest_dir="$root_dir""/""$format"
+    local file_name=$(basename "$1")
+    local root_dir=$(dirname "$1")
+    local format=$2
+    local dest_dir="$root_dir""/""$format"
 
     if [[ ! -d "$dest_dir" ]]; then
         mkdir "$dest_dir"
     fi
 
-    dest_file="$dest_dir""/""$file_name"
+    local dest_file="$dest_dir""/""$file_name"
     echo "Trying to convert to $format.."
     if [[ $format == "libx265" ]]; then
         $ffmpeg_cmd -i "$1" -pix_fmt yuv420p10le -map 0 -c:a copy -c:s copy -c:v "$format" -x265-params profile=main10 "$dest_file"
@@ -36,19 +36,19 @@ function convto() {
 
 function scale() {
     if [[ $# -ne 3 ]]; then
-        msg="Three argument expected $# given\n
+        local msg="Three argument expected $# given\n
             \r\tUsage: scale pattovideo width height\n
             \rScale the video to width x height\n\n"
         printf "%s" "$msg"
         return 1
     fi
 
-    file_name=$(basename "$1")
-    root_dir=$(dirname "$1")
-    width="$2"
-    height="$3"
+    local file_name=$(basename "$1")
+    local root_dir=$(dirname "$1")
+    local width="$2"
+    local height="$3"
 
-    dest_file=$root_dir/"$width"x"$height"_"$file_name"
+    local dest_file=$root_dir/"$width"x"$height"_"$file_name"
 
     echo -e "Scaling...\n"
     $ffmpeg_cmd -i "$1" -vf scale="$width"x"$height" "$dest_file"
@@ -56,7 +56,7 @@ function scale() {
 
 function tomp3() {
     if [[ $# -ne 1 ]]; then
-        msg="One argument expected $# given\n
+        local msg="One argument expected $# given\n
              \r\tUsage: tomp3 ext\n
              \rAll files with .ext extension in current directory will be converted to .mp3\n\n"
         printf "%s" "$msg"
@@ -74,8 +74,8 @@ function tomp3() {
 }
 
 function tohevc() {
-    file="$1"
-    codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$file")
+    local file="$1"
+    local codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$file")
     make_heading "$file: $codec"
     if [[ $codec != "hevc" ]]; then
         if convto "$file" libx265; then
@@ -88,50 +88,50 @@ function tohevc() {
 
 function clipVideo() {
     if [[ $# -ne 3 ]]; then
-        msg="Three arguments expected $# given\n
+        local msg="Three arguments expected $# given\n
              \r\tUsage: clipVideo pathtovideo start_time end_time\n
              \rVideo is clipped from start_time to end_time\n\n"
         printf "%s" "$msg"
         return 1
     fi
 
-    file_name=$(basename "$1")
-    root_dir=$(dirname "$1")
-    dest_dir="$root_dir""/clipped"
-    start=$2
-    end=$3
+    local file_name=$(basename "$1")
+    local root_dir=$(dirname "$1")
+    local dest_dir="$root_dir""/clipped"
+    local start=$2
+    local end=$3
 
     if [[ ! -d "$dest_dir" ]]; then
         mkdir "$dest_dir"
     fi
 
-    dest_file="$dest_dir""/""$start""to""$end""of""$file_name"
-    dest_file="${dest_file//:/_}"
+    local dest_file="$dest_dir""/""$start""to""$end""of""$file_name"
+    local dest_file="${dest_file//:/_}"
     echo -e "\nClipping $file_name from $start to $end\n"
     $ffmpeg_cmd -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
 }
 
 function addsub() {
     if [[ $# -ne 2 ]]; then
-        msg="Three arguments expected $# given\n
+        local msg="Three arguments expected $# given\n
              \r\tUsage: addsub pathtovideo pathtosrt\n\n"
         printf "%s" "$msg"
         return 1
     fi
 
-    file_name=$(basename "$1")
-    ext="${file_name##*.}"
-    root_dir=$(dirname "$1")
-    subtitles=$2
+    local file_name=$(basename "$1")
+    local ext="${file_name##*.}"
+    local root_dir=$(dirname "$1")
+    local subtitles=$2
 
-    dest_file="$root_dir""/subbed_""$file_name"
+    local dest_file="$root_dir""/subbed_""$file_name"
     echo -e "\nAdding subs:$subtitles to $file_name\n"
 
     # (xfce4-terminal --working-directory="$root_dir" --command="watch -n 1 \"du -h '$file_name' '$dest_file'\"")
 
-    srt="mov_text" ## for mp4
+    local srt="mov_text" ## for mp4
     if [[ $ext == "mkv" ]]; then
-        srt="srt"
+        local srt="srt"
     fi
 
     if $ffmpeg_cmd -i "$subtitles" -i "$1" -c copy -c:s $srt -disposition:s:0 default "$dest_file"; then
@@ -146,13 +146,13 @@ function addsub() {
 
 function addsub2all() {
     for file in *; do
-        file_name=$(basename "$file")
-        name="${file_name%.*}"
-        ext="${file_name##*.}"
-        root_dir=$(dirname "$file")
-        subtitles="$root_dir""/""$name".srt
+        local file_name=$(basename "$file")
+        local name="${file_name%.*}"
+        local ext="${file_name##*.}"
+        local root_dir=$(dirname "$file")
+        local subtitles="$root_dir""/""$name".srt
         if ! [[ -f "$subtitles" ]]; then
-            subtitles="$root_dir""/""$name".en.srt
+            local subtitles="$root_dir""/""$name".en.srt
         fi
         if [[ -f "$subtitles" ]] && { [[ $ext == "mkv" ]] || [[ $ext == "mp4" ]] || [[ $ext == "m4v" ]]; }; then
             addsub "$file" "$subtitles"
@@ -162,13 +162,13 @@ function addsub2all() {
 
 
 function videoProcessing() {
-    action=$(gum choose "Re-encode")
+    local action=$(gum choose "Re-encode")
 
     if [[ $action == "Re-encode" ]]; then
-        file=$(gum file $(pwd))
-        format=$(gum choose "libx264" "libx265")
+        local file=$(gum file $(pwd))
+        local format=$(gum choose "libx264" "libx265")
 
-        codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$file")
+        local codec=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$file")
         if [[ $codec == "h264" && $format == "libx264" ]] || [[ $codec == "hevc" && $format == "libx265" ]]; then
             gum style \
 	            --foreground 212 --border-foreground 212 --border double \

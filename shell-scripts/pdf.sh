@@ -53,16 +53,16 @@ function shrinkPdf() {
             local quality="$2"
             case "$quality" in
             0)
-                quality="/screen"
+                local quality="/screen"
                 ;;
             1)
-                quality="/ebook"
+                local quality="/ebook"
                 ;;
             2)
-                quality="/prepress"
+                local quality="/prepress"
                 ;;
             3)
-                quality="/printer"
+                local quality="/printer"
                 ;;
             *)
                 echo -e "Quality should be between [0-3]. Use -h|--help to see the valid options"
@@ -90,14 +90,14 @@ function shrinkPdf() {
 
     if [[ -z "$outfile" ]]; then
         if [[ "${infile: -4:4}" == ".pdf" ]]; then ## filename has extension .pdf
-            outfile=${infile:0:-4}"-shrink.pdf"
+            local outfile=${infile:0:-4}"-shrink.pdf"
         else
-            outfile=$infile"-shrink.pdf"
+            local outfile=$infile"-shrink.pdf"
         fi
     fi
 
     if [[ -z "$quality" ]]; then
-        quality="/ebook"
+        local quality="/ebook"
     fi
 
     ## attempting to shrink
@@ -108,13 +108,13 @@ function shrinkPdf() {
 
 # -------------------------------- Merge Pdfs -------------------------------- #
 function combinePdfs() {
-    help_message="Usage: combinePdfs -o outputfile.pdf input_file1.pdf input_file2.pdf .."
+    local help_message="Usage: combinePdfs -o outputfile.pdf input_file1.pdf input_file2.pdf .."
 
-    SHORT=o:,h
-    LONG=output:,help
-    OPTS=$(getopt --alternative --options $SHORT --longoptions $LONG -- "$@")
+    local SHORT=o:,h
+    local LONG=output:,help
+    local OPTS=$(getopt --alternative --options $SHORT --longoptions $LONG -- "$@")
 
-    VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
+    local VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
     if [ "$VALID_ARGUMENTS" -eq 0 ]; then
         echo "${help_message}"
         return
@@ -125,7 +125,7 @@ function combinePdfs() {
     while :; do
         case "$1" in
         -o | --output)
-            output_file=$2
+            local output_file=$2
             shift 2
             ;;
         -h | --help)
