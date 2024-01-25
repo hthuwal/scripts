@@ -30,6 +30,7 @@ function delete_gone_branches() {
 
 # ---------------------- Remove Old Branches From Remote --------------------- #
 function removeBranchesFromRemote() {
+    git fetch -p;
     local padding="                "
     local date=$(gum input --value $(date '+%Y-%m-%d') --placeholder "Older than?")
     if [[ -z "$date" ]]; then

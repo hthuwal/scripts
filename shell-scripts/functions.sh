@@ -58,13 +58,13 @@ function cpp() {
     local num_params=$#
     if [[ $num_params -eq 2 ]]
     then    
-        echo "g++ $1 && time ./a.out < $2"
-        g++ "$1" && time ./a.out < "$2"
+        echo "g++ -Wall -g -O3 -fsanitize=address --std=c++17 ${1} && time ./a.out < ${2}"
+        g++ -Wall -g -O3 -fsanitize=address --std=c++17 "${1}" && time ./a.out < "${2}"
         rm a.out
     elif [[ $num_params -eq 1 ]]
     then
-        echo "g++ $1 && time ./a.out"
-        g++ "$1" && time ./a.out
+        echo "g++ -Wall -g -O3 -fsanitize=address --std=c++17 ${1} && time ./a.out"
+        g++ -Wall -g -O3 -fsanitize=address --std=c++17 "${1}" && time ./a.out
         rm a.out
     else
         echo -e "Atleast one argmuent required"
@@ -233,7 +233,7 @@ function fgrpcui() {
 
 	local protopath=${1}
 	local proto=$(find $protopath -type f | gum filter --placeholder="Select proto file")
-	if [[ -z $proto ]] {
+	if [[ -z ${proto} ]] {
 		echo "No Proto file selected. Exiting"
 		return
 	}
