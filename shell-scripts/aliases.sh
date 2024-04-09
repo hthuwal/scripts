@@ -105,6 +105,7 @@ alias dkb='docker-compose build'
 # ---------------------------------------------------------------------------- #
 
 alias j='z'
+alias y='yazi'
 alias r='ranger'
 alias rc='ranger --choosedir="$HOME/.rangerdir"; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 alias subs="subliminal download -l en"
