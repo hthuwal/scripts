@@ -32,9 +32,9 @@ alias slideshow="find . * | mpv -fs --image-display-duration=1 --playlist=-"
 #                               Downloading stuff                              #
 # ---------------------------------------------------------------------------- #
 
-alias youtube-dl-aria="youtube-dl --external-downloader 'aria2c' --external-downloader-args '--file-allocation=none -c -x 16 -s 16'" 
-alias youtube="youtube-dl -c -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mkv"
-alias youmusic="youtube-dl -c -f 'bestaudio[ext=m4a]' -x --audio-format mp3"
+alias youtube-dl-aria="yt-dlp --external-downloader 'aria2c' --external-downloader-args '--file-allocation=none -c -x 16 -s 16'" 
+alias youtube="yt-dlp -c -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mkv"
+alias youmusic="yt-dlp -c -f 'bestaudio[ext=m4a]' -x --audio-format mp3"
 alias pd='aria2c --file-allocation=none --async-dns=false -c -x 16 -s 16' 
 
 # ---------------------------------------------------------------------------- #
