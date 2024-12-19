@@ -57,6 +57,7 @@ source "$scripts/pdf.sh"
 export GOPATH=$HOME/go
 export PATH="/usr/local/opt/go@1.13/bin:$PATH"
 export PATH=/usr/local/sbin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$PATH
+export LESS='-R --mouse' # Enable mouse scrolling in less
 
 # Kill entire arguments on pressing Ctrl + W
 # autoload -U select-word-style
@@ -101,11 +102,12 @@ plugins=(
 	# jsontools
 	
 	# From https://github.com/skywind3000/z.lua
-	z.lua
+	# z.lua
 )
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
+eval "$(zoxide init zsh)"
 
 # ############################################################################ #
 #                              CUSTOM KEYBINDINGS                              #
@@ -148,8 +150,8 @@ zle -N                 cdUndoKey
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	# TODO: WTH are these key combinations
-	bindkey '^[^[[A'      cdParentKey
-	bindkey '^[^[[B'      cdUndoKey
+	bindkey '^[[1;3A'      cdParentKey
+	bindkey '^[[1;3B'      cdUndoKey
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 	bindkey '^[[1;3A'      cdParentKey
 	bindkey '^[[1;3D'      cdUndoKey
