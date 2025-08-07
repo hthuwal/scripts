@@ -145,19 +145,28 @@ function addsub() {
 }
 
 function addsub2all() {
-    for file in *; do
-        local file_name=$(basename "$file")
-        local name="${file_name%.*}"
-        local ext="${file_name##*.}"
-        local root_dir=$(dirname "$file")
-        local subtitles="$root_dir""/""$name".srt
-        if ! [[ -f "$subtitles" ]]; then
-            local subtitles="$root_dir""/""$name".en.srt
-        fi
-        if [[ -f "$subtitles" ]] && { [[ $ext == "mkv" ]] || [[ $ext == "mp4" ]] || [[ $ext == "m4v" ]]; }; then
-            addsub "$file" "$subtitles"
+    ## Assumes episode S04E01 is present both in movie name and subtitle name
+    for video in *.mkv; do
+        local episode=$(echo $video | grep -Eo "S[0-9]{1,2}E[0-9]{1,2}")
+        local srt=$(find . -maxdepth 1 -iname "*${episode}*.srt")
+        if [[ -f "${video}" && -f "${srt}" ]]; then
+            echo "Found ${video} and ${srt}. Mergin them."
+            addsub "${video}" "${srt}"
         fi
     done
+    # for file in *; do
+    #     local file_name=$(basename "$file")
+    #     local name="${file_name%.*}"
+    #     local ext="${file_name##*.}"
+    #     local root_dir=$(dirname "$file")
+    #     local subtitles="$root_dir""/""$name".srt
+    #     if ! [[ -f "$subtitles" ]]; then
+    #         local subtitles="$root_dir""/""$name".en.srt
+    #     fi
+    #     if [[ -f "$subtitles" ]] && { [[ $ext == "mkv" ]] || [[ $ext == "mp4" ]] || [[ $ext == "m4v" ]]; }; then
+    #         addsub "$file" "$subtitles"
+    #     fi
+    # done
 }
 
 
