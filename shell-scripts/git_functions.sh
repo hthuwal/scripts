@@ -56,7 +56,7 @@ function removeBranchesFromRemote() {
     populateOldBranches
 
     if [[ -n $old_branches ]]; then
-        local branchesToBeDeleted=$(echo $old_branches | gum choose --no-limit --height 100 | awk -F'|' '{print $3}')
+        local branchesToBeDeleted=$(echo $old_branches | gum choose --no-limit | awk -F'|' '{print $3}')
         if [[ -n $branchesToBeDeleted ]]; then
             echo $branchesToBeDeleted
             gum confirm "Delete aforementioned branches from remote?" &&

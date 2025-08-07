@@ -47,15 +47,14 @@ elif [[ -n "$WSL_DISTRO_NAME" ]]; then
 	export JDK_HOME="/home/linuxbrew/.linuxbrew/opt/openjdk@11"
 fi
 
-source "$scripts/aliases.sh"
-source "$scripts/functions.sh"
-source "$scripts/ffmpeg_utils.sh"
-source "$scripts/kube.sh"
-source "$scripts/git_functions.sh"
-source "$scripts/pdf.sh"
-source "$scripts/fun.sh"
-source "$scripts/lazyload.sh"
-source "$scripts/docker.sh"
+[[ -f "$scripts/aliases.sh" ]] && source "$scripts/aliases.sh"
+[[ -f "$scripts/functions.sh" ]] && source "$scripts/functions.sh"
+[[ -f "$scripts/ffmpeg_utils.sh" ]] && source "$scripts/ffmpeg_utils.sh"
+[[ -f "$scripts/kube.sh" ]] && source "$scripts/kube.sh"
+[[ -f "$scripts/git_functions.sh" ]] && source "$scripts/git_functions.sh"
+[[ -f "$scripts/pdf.sh" ]] && source "$scripts/pdf.sh"
+[[ -f "$scripts/lazyload.sh" ]] && source "$scripts/lazyload.sh"
+[[ -f "$scripts/docker.sh" ]] && source "$scripts/docker.sh"
 
 export GOPATH=$HOME/go
 export PATH="/usr/local/opt/go@1.13/bin:$PATH"
