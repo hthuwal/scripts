@@ -98,9 +98,13 @@ function activate()
 		if [[ "$dir" == "$home" ]]; then
 			echo "env folder not found."
 			local cond=false
-		elif [ -d "env" ]; then
+		elif [ -d "env" ] ; then
 			echo "Activating virtual environment located at: $(pwd)/env"
 			source	"env/bin/activate"
+			local cond=false
+		elif [ -d ".venv" ]; then 
+			echo "Activating virtual environment located at: $(pwd)/.venv"
+			source ".venv/bin/activate"
 			local cond=false
 		else
 			cd ..
