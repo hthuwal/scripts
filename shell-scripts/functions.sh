@@ -339,3 +339,82 @@ function compressEpub() {
 	du -h "$1"
 	echo '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'
 }
+
+# ----------------------------- Downloading Stuff ---------------------------- #
+yt() {
+	local CLIP_VALUE=""
+	if [[ ${#CLIP_CMD[@]} -gt 0 ]]; then
+		CLIP_VALUE=$("${CLIP_CMD[@]}" 2>/dev/null)
+	fi
+
+	# Mode
+	local MODE=$(gum choose "Video" "Audio") || return
+
+	# URL
+	local URL=$(gum input --value "$CLIP_VALUE" --placeholder "Paste YouTube URL")
+	[[ -z "$URL" ]] && return
+
+	local COMMON=(-c -N 4)
+
+	if [[ "$MODE" == "Audio" ]]; then
+		local CMD=(yt-dlp "${COMMON[@]}" -f "bestaudio[ext=m4a]" -x --audio-format mp3 "$URL")
+		gum style --foreground 212 "Running: ${CMD[*]}"
+		"${CMD[@]}"
+		return
+	fi
+
+	# Resolution
+	local RES=$(gum choose "Best" "1080p" "720p") || return
+
+	case "$RES" in
+		"1080p")
+		FORMAT="bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=1080]+bestaudio"
+		;;
+		"720p")
+		FORMAT="bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=720]+bestaudio"
+		;;
+		*)
+		FORMAT="bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio"
+		;;
+	esac
+
+	local CMD=(yt-dlp "${COMMON[@]}" -f "$FORMAT" --merge-output-format mkv "$URL")
+
+	gum style --foreground 212 "Running: ${CMD[*]}"
+	if "${CMD[@]}"; then
+		gum style --foreground 82 "✅ Download completed successfully!"
+	else
+		gum style --foreground 196 "❌ Download failed."
+		return 1
+	fi
+}
+
+pd() {
+	local CLIP_VALUE=""
+	if [[ ${#CLIP_CMD[@]} -gt 0 ]]; then
+		CLIP_VALUE=$("${CLIP_CMD[@]}" 2>/dev/null)
+	fi
+
+	# URL
+	local URL=$(gum input --value "$CLIP_VALUE" --placeholder "Paste download URL")
+	[[ -z "$URL" ]] && return
+
+	# Concurrency
+	local CONN=$(gum choose "4" "8" "16") || return
+
+	# Optional filename
+	local OUT=$(gum input --placeholder "Output filename (optional)")
+
+	local CMD=(aria2c --file-allocation=none -c -x "$CONN" -s "$CONN")
+
+	[[ -n "$OUT" ]] && CMD+=(-o "$OUT")
+	CMD+=("$URL")
+
+	gum style --foreground 212 "Running: ${CMD[*]}"
+ 	if "${CMD[@]}"; then
+        gum style --foreground 82 "✅ Download completed successfully!"
+    else
+        gum style --foreground 196 "❌ Download failed."
+        return 1
+    fi
+}
