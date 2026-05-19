@@ -26,8 +26,8 @@ key[ShiftTab]="${terminfo[kcbt]}"
 # ############################################################################ #
 
 
-local scripts="$HOME/dev/scripts/shell-scripts"
-local work_scripts="$HOME/work/for-work-by-me/work-scripts/bash-scripts/work.sh"
+local scripts="$HOME/dev/scripts/shell-scripts/init-sh"
+local work_scripts="$HOME/dev/work-scripts/bash-scripts/work.sh"
 
 if [[ -f "$work_scripts" ]]; then
 	source "$work_scripts"
@@ -47,14 +47,9 @@ elif [[ -n "$WSL_DISTRO_NAME" ]]; then
 	export JDK_HOME="/home/linuxbrew/.linuxbrew/opt/openjdk@11"
 fi
 
-[[ -f "$scripts/aliases.sh" ]] && source "$scripts/aliases.sh"
-[[ -f "$scripts/functions.sh" ]] && source "$scripts/functions.sh"
-[[ -f "$scripts/ffmpeg_utils.sh" ]] && source "$scripts/ffmpeg_utils.sh"
-[[ -f "$scripts/kube.sh" ]] && source "$scripts/kube.sh"
-[[ -f "$scripts/git_functions.sh" ]] && source "$scripts/git_functions.sh"
-[[ -f "$scripts/pdf.sh" ]] && source "$scripts/pdf.sh"
-[[ -f "$scripts/lazyload.sh" ]] && source "$scripts/lazyload.sh"
-[[ -f "$scripts/docker.sh" ]] && source "$scripts/docker.sh"
+for f in "$scripts"/*.sh; do
+	[[ -f "$f" ]] && source "$f"
+done
 
 export GOPATH=$HOME/go
 export PATH="/usr/local/opt/go@1.13/bin:$PATH"

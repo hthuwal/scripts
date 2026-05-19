@@ -119,3 +119,7 @@ elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 fi
 
 alias wtf_scroll='tput rmcup'
+
+if command -v safe-rm &>/dev/null; then
+	alias rm='safe-rm'
+fi

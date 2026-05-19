@@ -29,7 +29,7 @@ function delete_gone_branches() {
 }
 
 # ---------------------- Remove Old Branches From Remote --------------------- #
-function removeBranchesFromRemote() {
+function remove_branches_from_remote() {
     git fetch -p;
     local padding="                "
     local date=$(gum input --value $(date '+%Y-%m-%d') --placeholder "Older than?")
@@ -39,7 +39,7 @@ function removeBranchesFromRemote() {
     fi
 
     local old_branches=""
-    function populateOldBranches() {
+    function populate_old_branches() {
         for remote_branch in $(git branch -r | grep -v "HEAD\|develop\|master\|main\|release*" | sed /\*/d); do
             if [[ -z "$(git log -1 --since=\"${date}\" -s ${remote_branch})" ]]; then
                 local author=$(git show --format="%an" ${remote_branch} | head -n 1)
@@ -53,7 +53,7 @@ function removeBranchesFromRemote() {
         done
     }
 
-    populateOldBranches
+    populate_old_branches
 
     if [[ -n $old_branches ]]; then
         local branchesToBeDeleted=$(echo $old_branches | gum choose --no-limit | awk -F'|' '{print $3}')
