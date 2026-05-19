@@ -21,12 +21,13 @@ key[PageUp]="${terminfo[kpp]}"
 key[PageDown]="${terminfo[knp]}"
 key[ShiftTab]="${terminfo[kcbt]}"
 
+
 # ############################################################################ #
 #                          SCRIPTS, ALIASES, FUNCTIONS                         #
 # ############################################################################ #
 
 
-local scripts="$HOME/dev/scripts/shell-scripts/init-sh"
+local scripts="$HOME/dev/scripts/shell-scripts/shell.d"
 local work_scripts="$HOME/dev/work-scripts/bash-scripts/work.sh"
 
 if [[ -f "$work_scripts" ]]; then
@@ -72,21 +73,21 @@ zle -N self-insert url-quote-magic
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 ENABLE_CORRECTION="false"
-
+ZSH_DISABLE_COMPFIX=true
+DISABLE_AUTO_UPDATE=true
 # ------------------------------ OH-MY-ZSH THEME ----------------------------- #
 
-ZSH_THEME='candy'
+ZSH_THEME='powerlevel10k/powerlevel10k'
 
 # ----------------------------- OH-MY-ZSH PLUGINS ---------------------------- #
 
 plugins=(
-	# node npm
 	copyfile
 	docker
 	colored-man-pages command-not-found
 
 	# Python
-	python pip pep8 pylint pyenv
+	uv
 
 	# From https://github.com/zsh-users/
 	zsh-syntax-highlighting 
@@ -94,12 +95,6 @@ plugins=(
 	zsh-autosuggestions
 	history-substring-search
 	zsh-interactive-cd
-	
-	#json
-	# jsontools
-	
-	# From https://github.com/skywind3000/z.lua
-	# z.lua
 )
 
 # Load oh-my-zsh
@@ -205,3 +200,6 @@ export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;
 # zmodload -a autocomplete
 # zmodload -a complist
 # zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+
+source ${HOME}/.p10k.zsh
