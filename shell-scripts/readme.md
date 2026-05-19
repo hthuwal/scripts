@@ -1,126 +1,137 @@
-# ffmpeg_utils.sh
+# shell-scripts
 
-Contains Functions for doing some video related tasks
+Shell configuration and utility scripts for zsh.
 
-### Dependency
-- ffmpeg
-- [ffmpeg-bar](https://github.com/sidneys/ffmpeg-progressbar-cli) (wrapper around ffmpeg to show progress)
+## Structure
 
-### 1. tox264
-
-```bash
-tox264 pathtovideo
+```
+shell-scripts/
+├── zshrc            # Main zsh config (symlink to ~/.zshrc)
+├── shell.d/         # Scripts sourced automatically by zshrc at startup
+│   ├── aliases.sh
+│   ├── functions.sh
+│   ├── ffmpeg_utils.sh
+│   ├── git_functions.sh
+│   ├── kube.sh
+│   ├── docker.sh
+│   ├── gcp.sh
+│   ├── pdf.sh
+│   └── lazyload.sh
+└── hp-driver-fix.sh # Standalone script (see below)
 ```
 
-Re-encode video using x264 codec. Re-encoded video is stored in **x264** folder in the root directory of the video
+## shell.d
 
-**Arguments**
+### aliases.sh
 
-- pathtovideo: path to the video to be converted.
+| Alias | Command |
+|---|---|
+| `gst`, `gch`, `gl`, `gcb`, `gb`, `gtm` | git shortcuts |
+| `dcls`, `dils`, `dcrm`, `dirm`, `dprune` | docker container/image management |
+| `dku`, `dkd`, `dks`, `dkl`, `dkb` | docker-compose shortcuts |
+| `kcat`, `kdiff` | kitty icat / diff (kitty only) |
+| `xp` / `xpi` | paste from clipboard (text / image) |
+| `play_selection` | play clipboard URL with mpv |
+| `slideshow` | slideshow of all images in current dir via mpv |
+| `pie` | `python3` |
+| `j` | `z` (zoxide) |
+| `y` / `yy` | yazi file manager |
+| `r` / `rc` | ranger (rc returns to last dir) |
+| `bcp` | rsync with progress |
+| `ex` | universal archive extractor |
+| `o` | `open` / `xdg-open` / `wslview` |
+| `vi` | vim |
+| `subs` | download English subtitles via subliminal |
+| `wtf_scroll` | fix terminal scroll after fullscreen app |
+| `remorphans`, `remcache`, `cleanup`, `remove` | Arch/yay package cleanup (Linux only) |
 
-### 2. tomp3
+### functions.sh
+
+| Function | Description |
+|---|---|
+| `activate` | Activate nearest `env/` or `.venv/` walking up the tree |
+| `cpp <file> [input]` | Compile and run a C++ file with sanitizers |
+| `gio <lang>` | Fetch `.gitignore` template from gitignore.io |
+| `rename_media <dir>` | Rename media files by creation date using exiftool |
+| `pad <in> <out> <px> [color]` | Add padding around an image using ImageMagick |
+| `ffbs <dir> <size>` | Find files by size (e.g. `+1G`, `-500M`) |
+| `ex <archive>` | Extract any archive format |
+| `random_num <digits>` | Generate a random number with N digits |
+| `random_string <len>` | Generate a random alphanumeric string |
+| `make_heading <text>` | Print a centered heading across terminal width |
+| `xsv-head <file> [n]` | Preview first N rows of a CSV via xsv |
+| `dksul <service>` | docker-compose stop → up → logs for a service |
+| `fgrpcui <proto_dir>` | Interactive grpcui launcher using gum |
+| `fgrpcurl <proto_dir>` | Interactive grpcurl launcher using gum |
+| `yy` | yazi with auto `cd` on exit |
+| `compressEpub <file>` | Re-compress epub images to webp |
+| `yt` | Interactive yt-dlp downloader (video or audio) via gum |
+| `pd` | Interactive aria2c downloader via gum |
+| `dinr <YYYY-MM-DD>` | USD → INR rate for a given date (FBIL) |
+
+### ffmpeg_utils.sh
+
+| Function/Alias | Description |
+|---|---|
+| `convto <file> <codec>` | Re-encode video to `libx264` or `libx265` |
+| `scale <file> <w> <h>` | Scale video to given resolution |
+| `tomp3 <ext>` | Convert all `*.ext` files in cwd to mp3 |
+| `tohevc <file>` | Convert to HEVC if not already |
+| `clipVideo <file> <start> <end>` | Clip a segment of a video |
+| `addsub <video> <srt>` | Mux subtitles into a video |
+| `addsub2all` | Mux subtitles for all matching mkv+srt pairs in cwd |
+| `videoProcessing` | Interactive re-encode workflow via gum |
+| `img2vid` (alias) | Create video from image sequence |
+
+### git_functions.sh
+
+| Function | Description |
+|---|---|
+| `delete_gone_branches <dir>` | Delete local branches whose remote is gone |
+| `remove_branches_from_remote` | Interactively delete old remote branches via gum |
+
+### kube.sh
+
+| Alias/Function | Description |
+|---|---|
+| `kcuc`, `kccc`, `kcgc` | kubectl context management |
+| `kgp`, `kgpa`, `kgpw`, `kdp` | get/describe pods |
+| `kgns`, `kdns` | namespaces |
+| `kgno`, `kdno`, `kdelno` | nodes |
+| `kl`, `klf` | logs / follow |
+| `kcp <ns> <pod> <src> <dst>` | Copy files from a pod with progress (via pv) |
+| `klogs <service>` | Tail pod logs via stern |
+
+### docker.sh
+
+| Function | Description |
+|---|---|
+| `dkexec` | Interactively exec into a running container via gum |
+
+### gcp.sh
+
+| Function | Description |
+|---|---|
+| `airflowui <project-id> [location]` | Open Cloud Composer Airflow UI in browser |
+
+### pdf.sh
+
+| Function | Description |
+|---|---|
+| `darkenPdf <file>` | Increase contrast of a scanned PDF |
+| `shrinkPdf -i <file> [-o output] [-q 0-3]` | Compress a PDF using Ghostscript |
+| `combinePdfs -o <out> <file1> <file2> ...` | Merge multiple PDFs |
+
+### lazyload.sh
+
+Lazy-loads `nvm` and `fzf` on first use to keep shell startup fast.
+
+---
+
+## hp-driver-fix.sh
+
+Patches the HP printer driver `.dmg` to bypass the macOS version check (bumps the requirement from 15.0 → 100.0).
 
 ```bash
-tomp3 ext
+./hp-driver-fix.sh HewlettPackardPrinterDrivers.dmg
 ```
-
-Convert all the files with with *.ext* extension in the current directory are converted to *.mp3*
-
-**Arguments**
-
-- ext: extension of files to be converted. e.g *mp4*, *mkv* etc..
-
-### 3. clipVideo
-
-```bash
-clipVideo pathtovideo start_time end_time
-```
-
-Video is clipped from start_time to end_time. Clipped file is stored in the **clipped** folder in the root directory of the video.
-
-**Arguments**
-
-- pathtovideo: path to the video to be converted. e.g **movie.mp4**
-- start_time: e.g **16:10**
-- end_time: e.g **17:20**
-
-### 4. addsub
-```bash
-addsub pathtovideo pathtosubtitles
-```
-
-Mux subtitles into the video. (Replaces all previous subtitles)
-
-### 5. addsub2all
-
-```bash
-addsub2all
-```
-
-Add subtitles to those files in the current directory for which subtitles are present.
-
-Note: for **movie.mp4** subtitles should be named as **movie.srt**
-
-# Script_numbering_dir_content.sh
-
-### Description
-
-This Shell Script creates copies of the files of the current directory in a new folder named "out" such that the copied files are enumerated.That is the names of the copied files will be like 1.txt 2.png etc...
-
-Note : No affect on the subdirectories in the current folder. Only files are 
-	   enumerated.
-
-### Usage
-1. copy the script to the directory whose files you want to enumerate.
-2. run the script
-
-### Arguments
-Script accepts one command line argument : that is the number from which enumeration is to be started. If not provided enumeration starts from 1
-
-### Example
-Suppose the current directory contains 3 files and 1 folder 
-	
-	a.txt 	
-	b.png 	
-	c.jpg 	
-	Folder
-
-1) ./Script_numbering_dir_content.sh 
-
-	after above command current directory would contain
-		
-		out 	
-		a.txt 	
-		b.png 	
-		c.jpg 	
-		Folder
-
-	and "out" would contain 
-		
-		01.txt 	
-		02.png 	
-		03.jpg  
-
-2) ./Script_numbering_dir_content.sh 49
-
-	after above command current directory would contain
-		
-		out 	
-		a.txt 	
-		b.png 	
-		c.jpg 	
-		Folder
-
-	and "out" would contain 
-	    
-	    49.txt 	
-	    50.png 	
-	    51.jpg
-
-___
-
-# Update
-
-- Removed bug preventing enumeration of files with "space" in their names.
-- Removed bug preventing enumeration of files without an extension.
-
