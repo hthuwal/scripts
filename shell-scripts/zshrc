@@ -56,6 +56,7 @@ export GOPATH=$HOME/go
 export PATH="/usr/local/opt/go@1.13/bin:$PATH"
 export PATH=/usr/local/sbin:$HOME/bin:$HOME/.local/bin:$GOPATH/bin:$PATH
 export LESS='-R --mouse' # Enable mouse scrolling in less
+export EDITOR='code --wait'
 
 # Kill entire arguments on pressing Ctrl + W
 # autoload -U select-word-style
