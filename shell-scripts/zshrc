@@ -106,17 +106,9 @@ eval "$(zoxide init zsh)"
 #                              CUSTOM KEYBINDINGS                              #
 # ############################################################################ #
 
-# Bind Keys to history-substring-search
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	# Option + Up and Option + Down on mac
-	bindkey '^[[1;5A' history-substring-search-up
-	bindkey '^[[1;5B' history-substring-search-down
-elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-	# Ctrl + Up and Ctrl + Down on non-mac
-	bindkey '^[[1;5A' history-substring-search-up
-	bindkey '^[[1;5B' history-substring-search-down
-fi
+# Bind Keys to history-substring-search (Alt+Up / Alt+Down)
+bindkey $'\e[1;3A' history-substring-search-up
+bindkey $'\e[1;3B' history-substring-search-down
 
 # Restore Default up and Down to beginning with search
 [[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"   up-line-or-beginning-search
@@ -125,30 +117,31 @@ fi
 
 # --------------------------- GOTO PARENT, GO BACK --------------------------- #
 
+_cd_refresh_prompt() {
+	local f
+	for f in "${precmd_functions[@]}"; do
+		"$f" 2>/dev/null
+	done
+	zle reset-prompt
+}
+
 cdUndoKey() {
+	[[ ${#dirstack[@]} -eq 0 ]] && return
 	popd
-	clear
-	zle       reset-prompt
+	_cd_refresh_prompt
 }
 
 cdParentKey() {
+	[[ "$PWD" == "/" ]] && return
 	pushd ..
-	clear
-	zle      reset-prompt
+	_cd_refresh_prompt
 }
 
 zle -N                 cdParentKey
 zle -N                 cdUndoKey
 
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	# TODO: WTH are these key combinations
-	bindkey '^[[1;3A'      cdParentKey
-	bindkey '^[[1;3B'      cdUndoKey
-elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-	bindkey '^[[1;3A'      cdParentKey
-	bindkey '^[[1;3D'      cdUndoKey
-fi
+bindkey $'\e[1;4A' cdParentKey   # Alt+Shift+Up or Option+Shift+Up on mac
+bindkey $'\e[1;4B' cdUndoKey     # Alt+Shift+Down or Option+Shift+Down on mac
 
 # ############################################################################ #
 #                       CUSTOM ENV VARIABLES AND OPTIONS                       #
@@ -164,7 +157,6 @@ export SAVEHIST=$HISTSIZE
 export HISTFILE=~/.zhistory
 
 setopt HIST_FIND_NO_DUPS
-# unsetopt share_history
 
 # ############################################################################ #
 #                                     HACKS                                    #
