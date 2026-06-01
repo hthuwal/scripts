@@ -51,11 +51,26 @@ function kcp() {
 }
 
 function klogs() {
-    local service=$1
-    if [[ -z "$service" ]]; then
-        echo "Pod name is required."
+    local input=$1
+    if [[ -z "$input" ]]; then
+        echo "Usage: klogs <pod-name|service-name>"
         return 1
     fi
-    echo stern -n microservices --since 1s "^${service}" -c "${service}"
-    stern -n microservices --since 1s "^${service}" -c "${service}"
+
+    local pattern container
+
+    # Detect if input is a full pod name (e.g. ms-appointments-7c9bdfd5b-hpua0)
+    # by matching the trailing ReplicaSet hash (9-10 chars) and pod hash (5 chars).
+    # If so, strip the two hashes to derive the container name (e.g. ms-appointments).
+    # Otherwise treat the input as a service/deployment name used directly.
+    if [[ "$input" =~ ^.+-[a-z0-9]{9,10}-[a-z0-9]{5}$ ]]; then
+        pattern="^${input}"
+        container=$(echo "$input" | rev | cut -d'-' -f3- | rev)
+    else
+        pattern="^${input}"
+        container="${input}"
+    fi
+
+    echo stern -n microservices --since 1s "${pattern}" -c "${container}"
+    stern -n microservices --since 1s "${pattern}" -c "${container}"
 }
