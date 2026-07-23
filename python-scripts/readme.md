@@ -143,3 +143,89 @@ The path to the folder needs to be passed as command line argument. If no argume
 **Dependency: Subliminal**
 
 ``pip install subliminal``
+
+<br>
+
+---
+
+### 🏷️ Label Jira Epic
+
+Recursively discovers a Jira epic and all of its descendants, shows the issues
+for review, and adds one or more labels using Jira's bulk edit API.
+
+**Script**: [label_epic.py](label_epic.py)
+
+**Requirements**
+
+- [uv](https://docs.astral.sh/uv/) and Python 3.11 or newer
+- A Jira Cloud API token
+- Jira permissions to browse and edit every selected issue
+- Jira's global bulk change permission
+
+The script declares `requests`, `rich`, and `ratelimit` using inline PEP 723
+metadata. Running it through its executable shebang lets `uv` create and cache
+an isolated environment automatically; no manual virtual environment or
+dependency installation is required.
+
+**Usage**
+
+```shell
+label_epic \
+  --url https://yourorg.atlassian.net \
+  --email you@example.com \
+  --token-file ~/.jira-api-token \
+  EPIC-123 label-one [label-two ...]
+```
+
+Options:
+
+```text
+--url URL            Jira Cloud base URL
+--email EMAIL        Atlassian account email
+--token-file PATH    File whose first non-empty line is the Jira API token
+--preview-file PATH  JSON preview/cache file (default: issues_preview.json)
+-h, --help           Show command help
+```
+
+**Workflow**
+
+1. Fetches the epic and traverses its descendants using `parent = ISSUE-KEY`.
+2. Reuses search results to avoid fetching each child individually and stops
+   searching below sub-tasks, because they cannot have children.
+3. Writes the epic, requested labels, issue keys, types, and summaries to the
+   preview JSON file.
+4. Displays the collected issues and asks for confirmation before making
+   changes.
+5. Adds labels in bulk batches and displays live submission and polling
+   progress. Existing labels are preserved, and adding a label already present
+   on an issue is safe.
+
+If the preview file already exists, the script displays its contents and asks
+whether to apply labels to that saved issue list, recollect the hierarchy, or
+abort.
+
+All Jira requests share a limit of 30 calls per minute. The script waits
+automatically when that limit is reached. Bulk edit notifications are enabled,
+so Jira may notify issue watchers.
+
+**Token file example**
+
+```text
+your-jira-api-token
+```
+
+Keep this file private:
+
+```shell
+chmod 600 ~/.jira-api-token
+```
+
+**Run from anywhere**
+
+The script is executable through `uv`. You can expose it on your `PATH` with a
+symlink:
+
+```shell
+chmod +x /path/to/python-scripts/label_epic.py
+ln -s /path/to/python-scripts/label_epic.py ~/bin/label_epic
+```
