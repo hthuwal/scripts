@@ -1,3 +1,9 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["walkdir", "click", "tqdm"]
+# ///
+
 import walkdir
 import click
 from tqdm import tqdm
