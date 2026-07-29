@@ -88,27 +88,31 @@ function tohevc() {
 
 function clipVideo() {
     if [[ $# -ne 3 ]]; then
-        local msg="Three arguments expected $# given\n
-             \r\tUsage: clipVideo pathtovideo start_time end_time\n
-             \rVideo is clipped from start_time to end_time\n\n"
+        # Cleaned up the formatting of your error message
+        local msg="Three arguments expected, $# given\nUsage: clipVideo pathtovideo start_time end_time\nVideo is clipped from start_time to end_time\n\n"
         printf "%s" "$msg"
         return 1
     fi
 
     local file_name=$(basename "$1")
     local root_dir=$(dirname "$1")
-    local dest_dir="$root_dir""/clipped"
+    local dest_dir="${root_dir}/clipped"
     local start=$2
     local end=$3
 
     if [[ ! -d "$dest_dir" ]]; then
-        mkdir "$dest_dir"
+        mkdir -p "$dest_dir" # -p prevents errors if the directory somehow exists
     fi
 
-    local dest_file="$dest_dir""/""$start""to""$end""of""$file_name"
+    # Cleaned up path joining
+    local dest_file="${dest_dir}/${start}to${end}of_${file_name}"
     local dest_file="${dest_file//:/_}"
+
     echo -e "\nClipping $file_name from $start to $end\n"
-    $ffmpeg_cmd -i "$1" -map 0 -ss "$2" -to "$3" -c copy "$dest_file"
+
+    # FIX: Move -ss and -to BEFORE the input file -i
+    # Also changed to explicit 'ffmpeg' command
+    ffmpeg -ss "$start" -to "$end" -i "$1" -map 0 -c copy "$dest_file"
 }
 
 function addsub() {
